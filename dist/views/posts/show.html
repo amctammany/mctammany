@@ -1,0 +1,37 @@
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Blog Home</h1>
+			<ol class="breadcrumb">
+				<li><a href="#" ng-href="#/posts">Blog</a></li>
+				<li class="active">{{post.title}}</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12 col-md-12">
+				<div class="row post">
+          <div class="col-lg-3 col-md-3 post-details">
+            <i>
+              {{post.createdAt | date}}
+            </i>
+            <br>
+            <div class="post-tags-list" ng-repeat="tag in post.tags">
+              <span class="post-tag-list-item">{{tag.name}}</span>
+            </div>
+          </div>
+          <div class="col-lg-9 col-md-9 post-summary">
+            <a class="post-title" href="#" ng-href="#/posts/{{post.urlString}}">{{post.title}}</a>
+            <div class="post-content" ng-bind-html="content">
+            </div>
+            <br>
+          </div>
+        </div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<button class="btn btn-primary" ng-click="editPost()">Edit</button>
+		<button class="btn btn-primary" ng-click="deletePost()">Delete</button>
+
+	</div>

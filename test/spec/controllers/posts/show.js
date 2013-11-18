@@ -1,17 +1,17 @@
 'use strict';
 
-describe('Controller: AppCtrl', function () {
+describe('Controller: ShowPostCtrl', function () {
 
   // load the controller's module
   beforeEach(module('mctApp'));
 
-  var AppCtrl,
+  var ShowPostCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    AppCtrl = $controller('AppCtrl', {
+    ShowPostCtrl = $controller('ShowPostCtrl', {
       $scope: scope
     });
   }));
