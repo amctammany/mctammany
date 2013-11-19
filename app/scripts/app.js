@@ -23,21 +23,21 @@ angular.module('mctApp', ['ngRoute', 'ngSanitize', 'ngResource'])
         templateUrl: 'views/posts/edit.html',
         controller: 'EditPostCtrl'
       })
-      .when('/new', {
-        templateUrl: 'views/new.html',
-        controller: 'NewCtrl'
+      .when('/molecules', {
+        templateUrl: 'views/molecules/index.html',
+        controller: 'MoleculesCtrl'
       })
-      .when('/index', {
-        templateUrl: 'views/index.html',
-        controller: 'IndexCtrl'
+      .when('/molecules/new', {
+        templateUrl: 'views/molecules/sketcher.html',
+        controller: 'MoleculeSketcherCtrl'
       })
-      .when('/show', {
-        templateUrl: 'views/show.html',
-        controller: 'ShowCtrl'
+      .when('/molecules/:name', {
+        templateUrl: 'views/molecules/show.html',
+        controller: 'ShowMoleculeCtrl'
       })
-      .when('/edit', {
-        templateUrl: 'views/edit.html',
-        controller: 'EditCtrl'
+      .when('/molecules/:name/edit', {
+        templateUrl: 'views/molecules/sketcher.html',
+        controller: 'MoleculeSketcherCtrl'
       })
       .otherwise({
         redirectTo: '/'

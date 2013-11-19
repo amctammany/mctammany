@@ -1,10 +1,6 @@
 'use strict';
 
 angular.module('mctApp')
-  .controller('IndexCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('MoleculesCtrl', function ($scope, MoleculeStore) {
+    $scope.molecules = MoleculeStore.query();
   });

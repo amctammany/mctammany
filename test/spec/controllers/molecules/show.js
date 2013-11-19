@@ -1,22 +1,19 @@
 'use strict';
 
-describe('Controller: ShowCtrl', function () {
+describe('Controller: ShowMoleculeCtrl', function () {
 
   // load the controller's module
   beforeEach(module('mctApp'));
 
-  var ShowCtrl,
+  var ShowMoleculeCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    ShowCtrl = $controller('ShowCtrl', {
+    ShowMoleculeCtrl = $controller('ShowMoleculeCtrl', {
       $scope: scope
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
-  });
 });

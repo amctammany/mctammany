@@ -1,0 +1,77 @@
+<div class="sketcher col-lg-12 col-md-12 well">
+  <div class="navbar navbar-default">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#file-menu">
+        <span class="sr-only">Toggle Navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="file-menu">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown">File <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li>
+              <a ng-click="saveMolecule()">Save</a>
+            </li>
+            <li>
+              <a ng-click="generateMolFile()">Mol File</a>
+            </li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown">Edit <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li>
+              <a >Undo</a>
+            </li>
+
+            <li>
+              <a >Redo</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a ng-click="satisfy()">Update</a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="col-lg-3 col-md-3 well">
+      <div class="row center">
+        <h3>Name</h3>
+         <input type="text" name="" ng-model="name" />
+      </div>
+      <div class="row center">
+        <h4>Mouse</h4>
+        <div class="btn-group">
+          <button class="btn btn-default" ng-class="getMouseToolClass(mouse)" ng-click="changeMouseTool(mouse)" ng-repeat="mouse in mouseTools">
+            {{mouse}}
+          </button>
+        </div>
+      </div>
+      <div class="row center">
+        <h4>Atom</h4>
+        <div class="btn-group" ng-repeat="group in atomGroups">
+          <button class="btn btn-default" ng-class="getAtomToolClass(atom)" ng-repeat="atom in group" ng-click="changeAtomTool(atom)" >{{atom}}</button>
+        </div>
+      </div>
+      <div class="row center">
+        <h4>Bond</h4>
+        <div class="btn-group" ng-repeat="bond in bondTypes">
+          <button class="btn btn-default" ng-class="getBondToolClass(bond)" ng-click="changeBondTool(bond)">{{bond}}</button>
+        
+        </div>
+      </div>
+    </div>
+
+    <div id="chem-sketcher-container" class="col-lg-9 col-md-9 well center">
+      <canvas id="chem-sketcher" width=600 height=400></canvas>
+    </div>
+  </div>
+</div>

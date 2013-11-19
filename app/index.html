@@ -74,6 +74,22 @@
                     </li>
                   </ul>
                 </li>
+
+                <li class="dropdown" ng-class="getClass('/molecules')">
+                  <a class="dropdown-toggle" data-toggle="dropdown">Molecules <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="#" ng-href="#/molecules">Molecules</a>
+                    </li>
+                    <li>
+                      <a href="#" ng-href="#/molecules/new">New Molecule</a>
+                    </li>
+                    <li>
+                      <a href="#" ng-href="#/molecules/archive">Archive</a>
+                    </li>
+                  </ul>
+                </li>
+
               </ul>
             </div>
           </div>
@@ -112,10 +128,16 @@
         <script src="scripts/posts/controllers/new.js"></script>
         <script src="scripts/posts/controllers/edit.js"></script>
         <script src="scripts/posts/controllers/show.js"></script>
+        <script src="scripts/molecules/services/molecule.js"></script>
+        <script src="scripts/molecules/services/atom.js"></script>
+        <script src="scripts/molecules/services/bond.js"></script>
+        <script src="scripts/molecules/services/moleculeStore.js"></script>
         <script src="scripts/molecules/controllers/new.js"></script>
         <script src="scripts/molecules/controllers/index.js"></script>
         <script src="scripts/molecules/controllers/show.js"></script>
         <script src="scripts/molecules/controllers/edit.js"></script>
+        <script src="scripts/molecules/controllers/sketcher.js"></script>
+        <script src="scripts/filters/groupBy.js"></script>
         <!-- endbuild -->
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
