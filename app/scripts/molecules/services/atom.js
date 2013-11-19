@@ -13,7 +13,6 @@ angular.module('mctApp')
       this.molecule.atoms.push(this);
       this.index = this.molecule.atoms.indexOf(this);
       this.bonds = [];
-      this.atoms = [];
     
     };
 

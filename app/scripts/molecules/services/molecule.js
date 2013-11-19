@@ -115,11 +115,47 @@ angular.module('mctApp')
       this.maxZ = positions[positions.length - 1].z;
 
       this.width = this.maxX - this.minX;
+      this.cx = this.minX + (this.width / 2);
       this.height = this.maxY - this.minY;
+      this.cy = this.minY + (this.height / 2);
       this.depth = this.maxZ - this.minZ;
+      this.cz = this.minZ + (this.depth / 2);
       this.depth = this.depth === Infinity ? 1 : this.depth;
 
 
+    };
+    Molecule.prototype.getLines = function () {
+      var lines = [];
+      for (var i = 0; i < this.bonds.length; i++) {
+        var bond = this.bonds[i];
+        lines.push([bond.startAtom.index, bond.endAtom.index, 1]);
+      }
+      return lines;
+      
+    };
+
+    Molecule.prototype.getVertices = function () {
+      this.getBoundingBox();
+      var vertices = [];
+      for (var i = 0; i < this.atoms.length; i++) {
+        var atom = this.atoms[i];
+        var v = {x: 0, y: 0, z: 0};
+        v.x = (atom.x - this.cx) / this.width;
+        v.x = v.x.toFixed(3);
+        v.y = (atom.y - this.cy) / this.height;
+        v.y = v.y.toFixed(3);
+        v.z = (atom.z - this.cz) / this.depth;
+        v.z = v.z.toFixed(3);
+        //v.x = atom.x - (this.minX + this.width) / 2;
+        //v.x = v.x / (1 * this.width / 2);
+        //v.y = atom.y - (this.minY + this.height) / 2;
+        //v.y = v.y / (1 * this.height / 2);
+        //v.z = atom.z - (this.minZ + this.depth) / 2;
+        //v.z = v.z / (1 * this.depth / 2);
+        v.z = v.z ? v.z : 1;
+        vertices.push([v.x, v.y, v.z]);
+      }
+      return vertices;
     };
     Molecule.prototype.normalize = function () {
       for (var i = 0; i < this.atoms.length; i++) {
@@ -137,7 +173,6 @@ angular.module('mctApp')
         atom.z = 1;
       }
 
-      console.log(this.atoms);
     };
  
     Molecule.prototype.satisfy = function (delta) {
@@ -163,16 +198,6 @@ angular.module('mctApp')
       return bond;
     };
 
-
-    Molecule.prototype.generateNormalizedMolFile = function () {
-      var m = new Molecule('', this.molFile, null);
-      m.parseMolFile();
-      m.getBoundingBox();
-      m.normalize();
-      m.generateMolFile();
-      return m.molFile;
-    
-    };
     Molecule.prototype.generateMolFile = function () {
       //this.getBoundingBox();
       //this.normalize();

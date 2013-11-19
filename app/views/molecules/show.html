@@ -2,9 +2,12 @@
   <!--<molecule molecule="getMolecule()">-->
   <!--</molecule>-->
   <div class="row center">
-    <div id="moleculeContainer"></div>
+    <div id="moleculeContainer">
+      <canvas id="moleculeCanvas" width=800 height=500></canvas>
+    </div>
   </div>
   <button class="btn" ng-click="logMolecule()">Log Molecule</button>
   <a href="#" ng-href="#/molecules/{{moleculeName}}/edit">Edit Molecule</a>
+  {{vertices}}
 
 </div>

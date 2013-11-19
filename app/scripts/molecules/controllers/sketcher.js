@@ -42,9 +42,9 @@ angular.module('mctApp')
         //$scope.molecule.addAtom($scope.atomTool, x, y, 0);
       //}
     /*});*/
-    $scope.normalize = function () {
-      var normalizedMolFile = $scope.molecule.generateNormalizedMolFile();
-      console.log(normalizedMolFile);
+    $scope.getVertices = function () {
+      var vs = $scope.molecule.getVertices();
+      console.log(vs);
     };
     $scope.handleMouseDown = function (e) {
       var x = e.offsetX;

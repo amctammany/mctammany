@@ -20,6 +20,13 @@ angular.module('mctApp')
       console.log(this.order);
     };
 
+    Bond.prototype.length = function () {
+      var dx = this.endAtom.x - this.startAtom.x;
+      var dy = this.endAtom.y - this.startAtom.y;
+      var dz = this.endAtom.z - this.startAtom.z;
+      var length = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      return length;
+    };
     Bond.prototype.distanceFrom = function (x, y, z) {
       var midX = ((this.startAtom.x - this.endAtom.x) / 2) + this.endAtom.x;
       var midY = ((this.startAtom.y - this.endAtom.y) / 2) + this.endAtom.y;
