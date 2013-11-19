@@ -15,6 +15,13 @@ angular.module('mctApp')
       this.selectedBond = null;
       this.dirty = false;
     };
+    Molecule.prototype.copy = function () {
+      var m = new Molecule(this.name);
+      m.atoms = this.atoms;
+      m.bonds = this.bonds;
+      console.log(m);
+    };
+
     Molecule.prototype.clearSelection = function () {
       for (var i = 0; i < this.selection.length; i++) {
         var obj = this.selection[i];
@@ -112,9 +119,6 @@ angular.module('mctApp')
       this.depth = this.maxZ - this.minZ;
       this.depth = this.depth === Infinity ? 1 : this.depth;
 
-      console.log(this.width);
-      console.log(this.height);
-      console.log(this.depth);
 
     };
     Molecule.prototype.normalize = function () {
@@ -159,6 +163,16 @@ angular.module('mctApp')
       return bond;
     };
 
+
+    Molecule.prototype.generateNormalizedMolFile = function () {
+      var m = new Molecule('', this.molFile, null);
+      m.parseMolFile();
+      m.getBoundingBox();
+      m.normalize();
+      m.generateMolFile();
+      return m.molFile;
+    
+    };
     Molecule.prototype.generateMolFile = function () {
       //this.getBoundingBox();
       //this.normalize();
@@ -180,7 +194,6 @@ angular.module('mctApp')
     };
 
     Molecule.prototype.parseMolFile = function () {
-      console.log(this.molFile);
       var lines = this.molFile.split('\n');
       var info = lines[0].split(' ');
 
