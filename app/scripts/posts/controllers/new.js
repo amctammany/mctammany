@@ -2,14 +2,14 @@
 
 angular.module('mctApp')
   .controller('NewPostCtrl', function ($scope, $location, Post) {
-    $scope.post = {title: null, tags: null, content: null};
+    $scope.post = {title: '', tags: '', content: ''};
     $scope.preview = '';
 
     var converter = new Showdown.converter();
 
     $scope.$watch('post.content', function () {
       if (!$scope.post.content) {return;}
-      $scope.content = converter.makeHtml($scope.post.content);
+      $scope.preview = converter.makeHtml($scope.post.content);
     });
     $scope.parseContent = function (text) {
       if (!text) {return;}
