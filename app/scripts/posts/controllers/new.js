@@ -2,7 +2,7 @@
 
 angular.module('mctApp')
   .controller('NewPostCtrl', function ($scope, $location, Post) {
-    $scope.post = {title: '', tags: '', content: ''};
+    $scope.post = {title: '', tags: null, content: ''};
     $scope.preview = '';
 
     var converter = new Showdown.converter();
