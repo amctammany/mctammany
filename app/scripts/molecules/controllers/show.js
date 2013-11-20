@@ -9,7 +9,8 @@ angular.module('mctApp')
         $scope.name = $scope.molecule.name;
         $scope.molecule.parseMolFile();
         $scope.renderer = new Renderer($scope.molecule, 'moleculeCanvas');
-        $scope.renderer.render();
+        $scope.renderer.animate();
+        //$scope.renderer.rotateTo(0.6, .6, 0.0);
       });
     } else {
       $scope.molecule = new Molecule(false, false, $scope.ctx);

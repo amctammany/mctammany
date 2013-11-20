@@ -119,8 +119,9 @@ angular.module('mctApp')
       this.height = this.maxY - this.minY;
       this.cy = this.minY + (this.height / 2);
       this.depth = this.maxZ - this.minZ;
+      console.log(this.depth);
       this.cz = this.minZ + (this.depth / 2);
-      this.depth = this.depth === Infinity ? 1 : this.depth;
+      this.depth = this.depth === 0 ? 1 : this.depth;
 
 
     };

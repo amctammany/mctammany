@@ -110,8 +110,20 @@ angular.module('mctApp')
       this.cx = this.width / 2;
       this.cy = this.height / 2;
 
-      this.points = this.molecule.getVertices();
-      console.log(this.points);
+      this.angles = [0, 0, 0];
+
+      this.rotX = 0.01;
+      this.rotY = 0.00;
+      this.rotZ = 0.0;
+
+      this.points = [];
+      this.atoms = this.molecule.getVertices();
+      for (var i = 0; i < this.atoms.length; i++) {
+        this.points[i] = [];
+        this.points[i][0] = this.atoms[i][0];
+        this.points[i][1] = this.atoms[i][1];
+        this.points[i][2] = this.atoms[i][2];
+      }
       this.lines = this.molecule.getLines();
       this.bbox = bbox(this.points);
       this.minX = this.bbox.x[0];
@@ -120,15 +132,38 @@ angular.module('mctApp')
       this.maxY = this.bbox.y[1];
       this.minZ = this.bbox.z[0];
       this.maxZ = this.bbox.z[0];
+      this.animationFrameId = 0;
+    };
+
+    Renderer.prototype.rescale = function (scale) {
+      rescale(this.points, 0.5);
+      this.render();
+    };
+    Renderer.prototype.rotate = function () {
+      this.angles[0] += this.rotX;
+      this.angles[1] += this.rotY;
+      this.angles[2] += this.rotZ;
+      rotate(this.atoms, this.points, this.angles);
     
     };
 
+    Renderer.prototype.animate = function () {
+      var animate = this.animate.bind(this);
+      this.rotate();
+      this.render();
+      this.animationFrameId = window.requestAnimationFrame(animate);
+      
+    };
+    Renderer.prototype.rotateTo = function (x, y, z) {
+      this.angles = [x, y, z];
+      rotate(this.atoms, this.points, this.angles);
+      this.render();
+    };
     Renderer.prototype.convertPointToCanvas = function (point) {
       var pt = {
         x: ((point[0] * this.width) / 2) + this.cx,
         y: ((point[1] * this.height) / 2) + this.cy,
       };
-      console.log(pt);
       return pt;
 
     };
@@ -140,7 +175,7 @@ angular.module('mctApp')
       this.points.map(function (pt) {
         var p = self.convertPointToCanvas(pt);
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 10, 0, 6.28, 0);
+        ctx.arc(p.x, p.y, 8, 0, 6.28, 0);
         ctx.fill();
       });
       this.lines.map(function (line) {
