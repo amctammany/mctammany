@@ -39,6 +39,10 @@ angular.module('mctApp', ['ngRoute', 'ngSanitize', 'ngResource'])
         templateUrl: 'views/molecules/sketcher.html',
         controller: 'MoleculeSketcherCtrl'
       })
+      .when('/experiments/balldrop', {
+        templateUrl: 'views/experiments/balldrop.html',
+        controller: 'BallDropCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
