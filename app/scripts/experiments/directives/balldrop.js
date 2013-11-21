@@ -27,6 +27,9 @@ angular.module('mctApp')
         
         };
         scope.handleMouseUp = function (e) {
+          //if (scope.line.start.e(1) === scope.line.end.e(1) && scope.line.start.e(2) === scope.line.end.e(2)) {
+            //scope.balldrop.removeLine(scope.line)
+          //}
           scope.line = null;
         
         };

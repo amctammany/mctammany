@@ -19,10 +19,13 @@ angular.module('mctApp')
 
     BallDrop.prototype.startNewLine = function (x, y) {
       if (this.animFrame) {window.cancelAnimationFrame(this.animFrame);}
-      var line = new Line();
-      line.start = $V([x, y]);
+      var line = new Line(x, y);
       this.lines.push(line);
       return line;
+    };
+    BallDrop.prototype.removeLine = function (line) {
+      var index = this.lines.indexOf(line);
+      this.lines.splice(line);
     };
     BallDrop.prototype.refreshBackground = function () {
       this.ctx.clearRect(0, 0, 800, 500);
@@ -32,6 +35,7 @@ angular.module('mctApp')
       this.refreshBackground();
       var ctx = this.ctx;
       this.ball.draw(ctx);
+      console.log(this.lines.length);
       this.lines.map(function (line) {
         line.draw(ctx);
       });
@@ -39,7 +43,7 @@ angular.module('mctApp')
 
     BallDrop.prototype.update = function (delta) {
       this.ball.integrate(0.05);
-      if (this.ball.current.e(2) > this.height) {this.ball.reset()}
+      if (this.ball.current.e(2) > this.height) {this.ball.reset();}
       this.render();
       //this.animFrame = window.requestAnimationFrame(this.update.bind(this));
     };
@@ -71,9 +75,9 @@ angular.module('mctApp')
 // }
 
 // Line {
-    Line = function () {
-      this.start = $V([0, 0]);
-      this.end = $V([0, 0]);
+    Line = function (x, y) {
+      this.start = $V([x, y]);
+      this.end = $V([x, y]);
     
     };
 
@@ -84,6 +88,11 @@ angular.module('mctApp')
       ctx.lineTo(this.end.e(1), this.end.e(2));
       ctx.closePath();
       ctx.stroke();
+    };
+
+    Line.prototype.length = function () {
+      var v = this.end.subtract(this.start);
+      return v.modulus();
     };
 
 // }
