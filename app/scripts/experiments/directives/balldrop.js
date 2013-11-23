@@ -20,7 +20,8 @@ angular.module('mctApp')
           if (!scope.line) { return; }
           var x = e.offsetX;
           var y = e.offsetY;
-          scope.line.end = $V([x, y]);
+          scope.line.end.x = x;
+          scope.line.end.y = y;
           scope.balldrop.render();
           
           
