@@ -59,6 +59,11 @@ angular.module('mctApp')
       dup: function () {
         return new Vector(this.x, this.y);
       },
+      zero: function () {
+        this.x = 0;
+        this.y = 0;
+        return this;
+      },
     };
 // BallDrop {
     BallDrop = function (canvas) {
@@ -110,6 +115,7 @@ angular.module('mctApp')
         shape = this.shapes[i];
         mtv = shape.collidesWith(this.ball);
         if (collisionDetected(mtv)) {
+          this.ball.bounce(mtv, shape);
           shape.color = 'red';
           this.ball.color = 'red';
         } else {
@@ -145,6 +151,7 @@ angular.module('mctApp')
       });
     };
     BallDrop.prototype.update = function (delta) {
+      this.ball.acceleration.y += 10;
       this.ball.integrate(0.04);
       if (this.ball.current.y > this.height) {this.reset();}
       this.render();
@@ -153,8 +160,8 @@ angular.module('mctApp')
 // }
 
     Projection = function (min, max) {
-      this.min = min; // Vector
-      this.max = max; // Scalar
+      this.min = min;
+      this.max = max;
     };
     Projection.prototype.overlaps = function (projection) {
       return this.max > projection.min && projection.max > this.min;
@@ -298,6 +305,72 @@ angular.module('mctApp')
       var position = this.current.multiply(2).subtract(this.previous).add(this.acceleration.multiply(delta * delta));
       this.previous = this.current.dup();
       this.current = position;
+      this.acceleration.zero();
+    };
+    Ball.prototype.separate = function (mtv) {
+      var dx, dy, velocityMagnitude, point;
+
+      if (mtv.axis === undefined) { // Circle
+        point = new Vector();
+        velocityMagnitude = Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2));
+        point.x = this.velocity.x / velocityMagnitude;
+        point.y = this.velocity.x / velocityMagnitude;
+        mtv.axis = new Vector(point);
+      
+      }
+
+      dx = mtv.axis.y * mtv.overlap;
+      dy = mtv.axis.y * mtv.overlap;
+
+      if ((dx < 0 && this.velocity.x < 0) || dx > 0 && this.velocity.x > 0) {
+        dx = -dx;
+      }
+      if ((dy < 0 && this.velocity.y < 0) || dy > 0 && this.velocity.y > 0) {
+        dy = -dy;
+      }
+      this.move(dx, dy);
+
+    };
+    Ball.prototype.checkMTVAxisDirection = function (mtv, shape) {
+      if (mtv.axis === undefined) { return; }
+
+      var c1 = this.current.dup();
+      var c2 = shape.centroid();
+      var cVector = c2.subtract(c1);
+      var cNormal = cVector.normalize();
+
+      if (cVector.dot(mtv.axis) > 0) {
+        mtv.axis.x = -mtv.axis.x;
+        mtv.axis.y = -mtv.axis.y;
+      }
+    };
+
+    Ball.prototype.bounce = function (mtv, shape) {
+      this.checkMTVAxisDirection(mtv, shape);
+      var perpendicular, vdotl, ldotl;
+      var velocityUnitVector = this.velocity.normalize();
+      var velocityMagnitude = this.velocity.getMagnitude();
+
+      var point = new Vector();
+      if (mtv.axis !== undefined) {
+        perpendicular = mtv.axis.perpendicular();
+      } else {
+        perpendicular = new Vector(-velocityUnitVector.y, velocityUnitVector.x);
+      }
+      vdotl = velocityUnitVector.dot(perpendicular);
+      ldotl = perpendicular.dot(perpendicular);
+      var dotProductRatio = vdotl / ldotl;
+      point.x = 2 * dotProductRatio * perpendicular.x - velocityUnitVector.x;
+      point.y = 2 * dotProductRatio * perpendicular.y - velocityUnitVector.y;
+      this.separate(mtv);
+      this.velocity.x = point.x * velocityMagnitude;
+      this.velocity.x = point.y * velocityMagnitude;
+
+    };
+    Ball.prototype.move = function (dx, dy) {
+      this.previous = this.current.dup();
+      this.current.x += dx;
+      this.current.y += dy;
     };
     Ball.prototype.draw = function (ctx) {
       ctx.fillStyle = this.color;
@@ -355,6 +428,10 @@ angular.module('mctApp')
 
     Line.prototype = new Shape();
 
+    Line.prototype.centroid = function () {
+      var length = this.length();
+      return new Vector(this.start.x + length / 2, this.start.y + length / 2);
+    };
     Line.prototype.reset = function () {
       this.color = 'black';
     };
