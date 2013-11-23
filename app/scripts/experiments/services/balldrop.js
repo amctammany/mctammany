@@ -2,7 +2,7 @@
 
 angular.module('mctApp')
   .factory('BallDrop', function () {
-    var BallDrop, Ball, Line, Projection, Shape, Vector;
+    var BallDrop, Ball, Line, Projection, Shape, Vector, MinimumTranslationVector;
 
     Vector = function (x, y) {
       this.x = x;
@@ -70,7 +70,7 @@ angular.module('mctApp')
       this.height = canvas.height;
 
       this.ball = new Ball();
-      this.shapes = [this.ball];
+      this.shapes = [];
       this.animFrame = window.requestAnimationFrame(this.update.bind(this));
     };
 
@@ -99,47 +99,89 @@ angular.module('mctApp')
       });
     };
 
+    function collisionDetected (mtv) {
+      return mtv.axis !== undefined || mtv.overlap !== 0;
+    }
     BallDrop.prototype.detectCollisions = function () {
       var numShapes = this.shapes.length;
-      var shape1, shape2;
-      var i, j;
+      var shape; //1, shape2;
+      var i, j, mtv;
       for (i = 0; i < numShapes; i++) {
-        for (j = 0; j < numShapes; j++) {
-          if (i !== j) {
-            shape1 = this.shapes[i];
-            shape2 = this.shapes[j];
-
-            if (shape1.collidesWith(shape2)) {
-              shape1.color = 'red';
-              shape2.color = 'red';
-            }
-          }
+        shape = this.shapes[i];
+        mtv = shape.collidesWith(this.ball);
+        if (collisionDetected(mtv)) {
+          shape.color = 'red';
+          this.ball.color = 'red';
+        } else {
+          shape.color = 'black';
+          this.ball.color = 'black';
         }
       }
+        //for (j = 0; j < numShapes; j++) {
+          //if (i !== j) {
+            //shape1 = this.shapes[i];
+            //shape2 = this.shapes[j];
+
+            //mtv = shape1.collidesWith(shape2);
+            //if (collisionDetected(mtv)) {
+              //shape1.color = 'red';
+              //shape2.color = 'red';
+            //} else {
+              //shape1.color = 'black';
+              //shape2.color = 'black';
+            //}
+            ////if (shape1.collidesWith(shape2)) {
+              ////shape1.color = 'red';
+              ////shape2.color = 'red';
+            ////}
+          //}
+        //}
+      //}
+    };
+    BallDrop.prototype.reset = function () {
+      this.ball.reset();
+      this.shapes.forEach(function (shape) {
+        shape.reset();
+      });
     };
     BallDrop.prototype.update = function (delta) {
-      this.ball.integrate(0.05);
-      if (this.ball.current.y > this.height) {this.ball.reset();}
+      this.ball.integrate(0.04);
+      if (this.ball.current.y > this.height) {this.reset();}
       this.render();
-      //this.animFrame = window.requestAnimationFrame(this.update.bind(this));
+      this.animFrame = window.requestAnimationFrame(this.update.bind(this));
     };
 // }
 
     Projection = function (min, max) {
-      this.min = min;
-      this.max = max;
+      this.min = min; // Vector
+      this.max = max; // Scalar
     };
     Projection.prototype.overlaps = function (projection) {
       return this.max > projection.min && projection.max > this.min;
     };
+    Projection.prototype.getOverlap = function (projection) {
+      var overlap;
+      if (!this.overlaps(projection)) { return 0; }
+      if (this.max > projection.max) {
+        overlap = projection.max - this.min;
+      } else {
+        overlap = this.max - projection.min;
+      }
+      return overlap;
+    };
 
+    MinimumTranslationVector = function (axis, overlap) {
+      this.axis = axis;
+      this.overlap = overlap;
+    };
     Shape = function () {
     
+      this.radius = undefined;
     };
-    Shape.prototype.collidesWith = function (other) {
-      var axes = this.getAxes().concat(other.getAxes());
-      return !this.separationOnAxes(axes, other);
-    };
+    //Shape.prototype.collidesWith = function (other) {
+      //var axes = this.getAxes().concat(other.getAxes());
+      //return !this.separationOnAxes(axes, other);
+    //};
 
     Shape.prototype.separationOnAxes = function (axes, shape) {
       var i;
@@ -154,8 +196,38 @@ angular.module('mctApp')
         if (! proj1.overlaps(proj2)) {
           return true;
         }
-
       }
+    };
+    Shape.prototype.minimumTranslationVector = function (axes, shape) {
+      var minimumOverlap = 10000;
+      var overlap;
+      var axisWithSmallestOverlap;
+      var axis;
+      var proj1;
+      var proj2;
+      for (var i = 0; i < axes.length; i++) {
+        axis = axes[i];
+        proj1 = shape.project(axis);
+        proj2 = this.project(axis);
+        overlap = proj1.getOverlap(proj2);
+
+        if (overlap === 0) { // No Collision
+          return {
+            axis: undefined,
+            overlap: 0
+          };
+        } else {
+          if (overlap < minimumOverlap) {
+            minimumOverlap = overlap;
+            axisWithSmallestOverlap = axis;
+          }
+        }
+      }
+      return {
+        axis: axisWithSmallestOverlap,
+        overlap: minimumOverlap
+      };
+    
     };
 
     function getPolygonPointClosestToCircle(polygon, circle) {
@@ -175,6 +247,27 @@ angular.module('mctApp')
       return closestPoint;
 
     }
+
+    function polygonCollidesWithPolygon (p1, p2) {
+      var mtv1 = p1.minimumTranslationVector(p1.getAxes(), p2);
+      var mtv2 = p1.minimumTranslationVector(p2.getAxes(), p2);
+
+      if (mtv1.overlap === 0 && mtv2.overlap === 0) {
+        return {
+          axis: undefined,
+          overlap: 0
+        };
+      } else {
+        return mtv1.overlap < mtv2.overlap ? mtv1 : mtv2;
+      }
+    }
+    function circleCollidesWithCircle (c1, c2) {
+      var distance = Math.sqrt(Math.pow(c2.current.x - c1.current.x, 2) + Math.pow(c2.current.y - c1.current.y, 2));
+      var overlap = Math.abs(c1.radius + c2.radius) - distance;
+      return overlap < 0 ?
+        new MinimumTranslationVector(undefined, 0) :
+        new MinimumTranslationVector(undefined, overlap);
+    }
     function polygonCollidesWithCircle(polygon, circle) {
       var min = 10000;
       var axes = polygon.getAxes();
@@ -183,7 +276,8 @@ angular.module('mctApp')
       var v2 = new Vector(closestPoint.x, closestPoint.y);
 
       axes.push(v1.subtract(v2).normalize());
-      return !polygon.separationOnAxes(axes, circle);
+      //return !polygon.separationOnAxes(axes, circle);
+      return polygon.minimumTranslationVector(axes, circle);
     
     }
 // Ball {
@@ -197,7 +291,7 @@ angular.module('mctApp')
       this.previous = new Vector(50, 10);
 
       this.velocity = new Vector(0, 0);
-      this.acceleration = new Vector(0, 15);
+      this.acceleration = new Vector(0, 5);
       this.color = 'black';
     };
     Ball.prototype.integrate = function (delta) {
@@ -221,23 +315,30 @@ angular.module('mctApp')
       return new Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
     };
     Ball.prototype.collidesWith = function (shape) {
-      var point;
-      var length;
-      var min = 10000;
-      var v1;
-      var v2;
-      var edge;
-      var perpendicular;
-      var normal;
-      var distance;
-      var axes = shape.getAxes;
-      if (axes === undefined) { // Circle
-        distance = Math.sqrt(Math.pow(shape.x - this.x, 2) + Math.pow(shape.y - this.y, 2));
-        return distance < Math.abs(this.radius + shape.radius);
-      } else { // Polygon
+      if (shape.radius === undefined) {
         return polygonCollidesWithCircle(shape, this);
+      } else {
+        return circleCollidesWithCircle(this, shape);
       }
     };
+    //Ball.prototype.collidesWith = function (shape) {
+      //var point;
+      //var length;
+      //var min = 10000;
+      //var v1;
+      //var v2;
+      //var edge;
+      //var perpendicular;
+      //var normal;
+      //var distance;
+      //var axes = shape.getAxes();
+      //if (axes === undefined) { // Circle
+        //distance = Math.sqrt(Math.pow(shape.x - this.x, 2) + Math.pow(shape.y - this.y, 2));
+        //return distance < Math.abs(this.radius + shape.radius);
+      //} else { // Polygon
+        //return polygonCollidesWithCircle(shape, this);
+      //}
+    //};
     Ball.prototype.getAxes = function () {
       return [];
     };
@@ -248,12 +349,15 @@ angular.module('mctApp')
       this.start = new Vector(x, y);
       this.end = new Vector(x+1, y+1);
       this.points = [this.start, this.end];
-      this.color = 'black';
+      this.reset();
     
     };
 
     Line.prototype = new Shape();
 
+    Line.prototype.reset = function () {
+      this.color = 'black';
+    };
     Line.prototype.project = function (axis) {
       var v = new Vector();
       var scalars = [];
@@ -264,8 +368,28 @@ angular.module('mctApp')
       });
       return new Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
     };
+    Line.prototype.collidesWith = function (shape) {
+      if (shape.radius !== undefined) {
+        return polygonCollidesWithCircle(this, shape);
+      } else {
+        return polygonCollidesWithPolygon(this, shape);
+      }
+    };
+    //Line.prototype.collidesWith = function (shape) {
+      //var axes = shape.getAxes();
+      //if (axes.length === 0) {
+        //return polygonCollidesWithCircle(this, shape);
+      //} else {
+        //axes.concat(this.getAxes());
+        //return !this.separationOnAxes(axes, shape);
+      //}
+    //};
     Line.prototype.getAxes = function () {
-      return [this.start.edge(this.end).normal()];
+      var axes = [];
+      axes.push(this.start.edge(this.end).normal());
+      axes.push(new Vector(0, 1));
+      axes.push(new Vector(1, 0));
+      return axes;
     };
     Line.prototype.draw = function (ctx) {
       ctx.beginPath();
