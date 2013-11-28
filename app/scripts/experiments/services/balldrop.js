@@ -364,7 +364,7 @@ angular.module('mctApp')
       point.y = 2 * dotProductRatio * perpendicular.y - velocityUnitVector.y;
       this.separate(mtv);
       this.velocity.x = point.x * velocityMagnitude;
-      this.velocity.x = point.y * velocityMagnitude;
+      this.velocity.y = point.y * velocityMagnitude;
 
     };
     Ball.prototype.move = function (dx, dy) {
