@@ -1,0 +1,45 @@
+<p>This is the ballistics view.</p>
+
+<div class="well">
+  <div class="row well">
+    <div class="col-lg-3 col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">Acceleration X</span>
+        <input type="number" class="form-control" ng-model="acceleration.x">
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">Acceleration Y</span>
+        <input type="number" class="form-control" ng-model="acceleration.y">
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">Position X</span>
+        <input type="number" class="form-control" ng-model="position.x">
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">Position Y</span>
+        <input type="number" class="form-control" ng-model="position.y">
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon">Gravity X</span>
+        <input type="number" class="form-control" ng-model="gravity.x">
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">Gravity Y</span>
+        <input type="number" class="form-control" ng-model="gravity.y">
+      </div>
+    </div>
+
+    <div class="col-lg-2 col-md-2">
+      <button ng-click="fire()">Fire</button>
+    </div>
+
+  </div>
+  <div class="row center">
+    <canvas id="ballistics-demo">
+    </canvas>
+  </div>
+</div>
