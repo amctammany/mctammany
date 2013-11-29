@@ -23,9 +23,7 @@ angular.module('mctApp')
       this.particle.clearAccumulator();
       this.particle.position.x = $scope.position.x;
       this.particle.position.y = $scope.position.y;
-      console.log(this.particle.velocity);
       this.particle.velocity.zero();
-      console.log(this.particle.velocity);
       this.particle.addForce(new Vector3($scope.acceleration.x, $scope.acceleration.y, 0));
     };
     Ball.prototype.checkBounds = function () {
@@ -53,7 +51,7 @@ angular.module('mctApp')
     };
     $scope.ball = new Ball();
     $scope.fire = function () {
-      if ($scope.animFrame) { window.cancelAnimationFram($scope.animFrame); }
+      if ($scope.animFrame) { window.cancelAnimationFrame($scope.animFrame); }
       $scope.ball.reset();
       $scope.animFrame = window.requestAnimationFrame(animate);
     };
