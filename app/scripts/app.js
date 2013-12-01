@@ -51,6 +51,10 @@ angular.module('mctApp', ['ngRoute', 'ngSanitize', 'ngResource'])
         templateUrl: 'views/mc2/ballistics.html',
         controller: 'BallisticsCtrl'
       })
+      .when('/mc2/spring', {
+        templateUrl: 'views/mc2/spring.html',
+        controller: 'SpringCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
