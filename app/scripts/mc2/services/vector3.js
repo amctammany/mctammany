@@ -89,6 +89,12 @@ angular.module('mctApp')
       return length;
     };
 
+    // squaredLength => Scalar
+    Vector3.prototype.squaredLength = function () {
+      var length = (this.x * this.x + this.y * this.y + this.z * this.z);
+      return length;
+    };
+
     // normalize => Vector (w/ length = 1)
     Vector3.prototype.normalize = function () {
       var d = this.getMagnitude();

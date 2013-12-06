@@ -51,7 +51,11 @@ angular.module('mctApp')
     };
     $scope.ball = new Ball();
     $scope.fire = function () {
-      if ($scope.animFrame) { window.cancelAnimationFrame($scope.animFrame); }
+      if ($scope.animFrame) {
+        window.cancelAnimationFrame($scope.animFrame);
+        $scope.animFrame = null;
+        return;
+      }
       $scope.ball.reset();
       $scope.animFrame = window.requestAnimationFrame(animate);
     };

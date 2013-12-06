@@ -108,6 +108,21 @@
                     </li>
                   </ul>
                 </li>
+                <li class="dropdown" ng-class="getClass('/music')">
+                  <a class="dropdown-toggle" data-toggle="dropdown">Music <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a href="#" ng-href="#/music">Music</a>
+                    </li>
+                    <li>
+                      <a href="#" ng-href="#/music/tuner">Tuner</a>
+                    </li>
+                    <li>
+                      <a href="#" ng-href="#/music/drumkit">Drumkit</a>
+                    </li>
+                  </ul>
+                </li>
+
 
 
 
@@ -168,8 +183,12 @@
         <script src="scripts/mc2/controllers/mc2.js"></script>
         <script src="scripts/mc2/services/vector3.js"></script>
         <script src="scripts/mc2/services/particle.js"></script>
+        <script src="scripts/mc2/services/spring.js"></script>
         <script src="scripts/mc2/controllers/ballistics.js"></script>
         <script src="scripts/mc2/controllers/spring.js"></script>
+        <script src="scripts/music/controllers/music.js"></script>
+        <script src="scripts/music/controllers/tuner.js"></script>
+        <script src="scripts/music/controllers/drumkit.js"></script>
         <!-- endbuild -->
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
