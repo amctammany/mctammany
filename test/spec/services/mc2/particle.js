@@ -20,10 +20,10 @@ describe('Service: Particle', function () {
     expect(!!Particle).toBe(true);
   });
 
-  it('should instantiate particle with position', function () {
-    expect(particle.position.x).toBe(x);
-    expect(particle.position.y).toBe(y);
-    expect(particle.position.z).toBe(z);
+  it('should instantiate particle with current', function () {
+    expect(particle.current.x).toBe(x);
+    expect(particle.current.y).toBe(y);
+    expect(particle.current.z).toBe(z);
   });
 
   it('should instantiate particle with mass', function () {
@@ -38,16 +38,16 @@ describe('Service: Particle', function () {
   });
 
   it('should integrate particle with delta = 1', function () {
-    expect(particle.position.x).toBe(x);
-    expect(particle.position.y).toBe(y);
-    expect(particle.position.z).toBe(z);
-    particle.velocity.x = x;
-    particle.velocity.y = y;
-    particle.velocity.z = z;
+    expect(particle.current.x).toBe(x);
+    expect(particle.current.y).toBe(y);
+    expect(particle.current.z).toBe(z);
+    particle.acceleration.x = x;
+    particle.acceleration.y = y;
+    particle.acceleration.z = z;
     particle.integrate(1);
-    expect(particle.position.x).toBe(x + x);
-    expect(particle.position.y).toBe(y + y);
-    expect(particle.position.z).toBe(z + z);
+    expect(particle.current.x).toBe(x + x);
+    expect(particle.current.y).toBe(y + y);
+    expect(particle.current.z).toBe(z + z);
 
   });
 

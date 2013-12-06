@@ -3,7 +3,8 @@
 angular.module('mctApp')
   .factory('Particle', function (Vector3) {
     var Particle = function (x, y, z, mass) {
-      this.position = new Vector3(x, y, z);
+      this.current = new Vector3(x, y, z);
+      this.previous = new Vector3(x, y, z);
       this.velocity = new Vector3(0, 0, 0);
       this.acceleration = new Vector3(0, 0, 0);
       this.damping = 1;
@@ -15,14 +16,17 @@ angular.module('mctApp')
     };
 
     Particle.prototype.integrate = function (delta) {
-      // Update Position
-      this.position.iadd(this.velocity.mul(delta));
-
       // Work out acceleration
-      this.acceleration.iadd(this.forceAccumulator.mul(this.inverseMass));
+      this.acceleration.iadd(this.forceAccumulator.mul(this.inverseMass * (delta * delta)));
 
       // Update velocity from acceleration
-      this.velocity.iadd(this.acceleration.mul(delta));
+      //this.velocity.iadd(this.acceleration.mul(delta));
+
+      // Update Position
+      var position = this.current.mul(2).sub(this.previous).add(this.acceleration);
+      this.previous = this.current;
+      this.current = position;
+      //this.position.iadd(this.velocity.mul(delta));
 
       // Impose drag
       //this.velocity.imul(Math.pow(this.damping, delta));
