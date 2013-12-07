@@ -16,6 +16,7 @@ angular.module('mctApp')
     };
 
     Particle.prototype.integrate = function (delta) {
+      if (this.inverseMass === 0) {return;}
       // Work out acceleration
       this.acceleration.iadd(this.forceAccumulator.mul(this.inverseMass * (delta * delta)));
 

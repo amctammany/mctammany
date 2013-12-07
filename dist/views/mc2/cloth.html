@@ -2,7 +2,27 @@
 
 <div class="row">
   <div class="col-lg-3 col-md-3 well">
-    <h3>Controls!</h3>
+    <div class="input-group">
+      <span class="input-group-addon">Rows</span>
+      <input class="form-control" type="number" ng-model="opts.rows">
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">Columns</span>
+      <input class="form-control" type="number" ng-model="opts.columns">
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">Gravity</span>
+      <input class="form-control" type="number" ng-model="opts.gravity">
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">Spring Constant</span>
+      <input class="form-control" type="number" ng-model="opts.k">
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">Iterations</span>
+      <input class="form-control" type="number" ng-model="opts.iterations">
+    </div>
+    <button ng-click="reset()">Reset</button>
   </div>
 
   <div class="col-lg-9 col-md-9 well">

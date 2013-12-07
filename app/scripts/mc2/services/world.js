@@ -35,6 +35,7 @@ angular.module('mctApp')
         fg.update(delta);
       });
       this.particles.forEach(function (p) {
+        if (p.isSelected) {return;}
         if (gravity) {p.addForce(gravity.acceleration);}
         p.integrate(delta);
       });

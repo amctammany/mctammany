@@ -9,13 +9,19 @@ angular.module('mctApp')
     $scope.ctx.fillStyle = '#ddd';
     $scope.ctx.fillRect(0, 0, 500, 500);
 
-    $scope.rows = 15;
-    $scope.columns = 15;
-    $scope.world = new World();
-    $scope.world.addGravity(0, 0.1, 0);
+    var rows, columns, gravity, k, iterations;
+    $scope.opts = {
+      rows: 15,
+      columns: 15,
+      gravity: 0.1,
+      k: 25,
+      iterations: 15,
+    };
 
-    $scope.points = [];
-    $scope.constraints = [];
+    $scope.$watch('opts', function () {
+      $scope.reset();
+    }, true);
+
 
     $scope.animFrame = null;
 
@@ -34,8 +40,8 @@ angular.module('mctApp')
       ctx.fill();
     };
 
-    var Constraint = function (p1, p2) {
-      this.body = $scope.world.addSpringForceGenerator(p1, p2, 125);
+    var Constraint = function (p1, p2, k) {
+      this.body = $scope.world.addSpringForceGenerator(p1, p2, k);
       //this.draw($scope.ctx);
     };
 
@@ -47,49 +53,64 @@ angular.module('mctApp')
       ctx.lineTo(p2.x, p2.y);
       ctx.stroke();
     };
-    var i, j;
-    var dx = ($scope.canvas.width - 100) / $scope.rows;
-    var dy = ($scope.canvas.height - 200) / $scope.columns;
-    for (i = 0; i < $scope.columns; ++i) {
-      $scope.points[i] = [];
-      for (j = 0; j < $scope.rows; ++j) {
-        $scope.points[i].push(new Point(i * dx, j * dy));
-      }
-    }
+    $scope.reset = function () {
+      window.cancelAnimationFrame($scope.animFrame);
+      rows = $scope.opts.rows;
+      columns = $scope.opts.columns;
+      gravity = $scope.opts.gravity;
+      k = $scope.opts.k;
+      iterations = $scope.opts.iterations;
 
-    var p1, p2;
-    for (i = 0; i < $scope.columns; ++i) {
-      for (j = 0; j < $scope.columns; ++j) {
-        if (i > 0) {
-          p1 = $scope.points[i - 1][j].body;
-          p2 = $scope.points[i][j].body;
-          $scope.constraints.push(new Constraint(p1, p2));
-        }
-        if (j > 0) {
-          p1 = $scope.points[i][j - 1].body;
-          p2 = $scope.points[i][j].body;
-          $scope.constraints.push(new Constraint(p1, p2));
-        
+      $scope.world = new World();
+      $scope.world.addGravity(0, gravity, 0);
+      $scope.points = [];
+      $scope.constraints = [];
+      var i, j;
+      var dx = ($scope.canvas.width - 100) / columns;
+      var dy = ($scope.canvas.height - 200) / rows;
+      for (i = 0; i < columns; ++i) {
+        $scope.points[i] = [];
+        for (j = 0; j < rows; ++j) {
+          $scope.points[i].push(new Point(i * dx, j * dy));
         }
       }
-    }
-    $scope.points[0][0].body.inverseMass = 0;
-    $scope.points[$scope.columns - 1][0].body.inverseMass = 0;
 
+      var p1, p2;
+      for (i = 0; i < columns; ++i) {
+        for (j = 0; j < rows; ++j) {
+          if (i > 0) {
+            p1 = $scope.points[i - 1][j].body;
+            p2 = $scope.points[i][j].body;
+            $scope.constraints.push(new Constraint(p1, p2, k));
+          }
+          if (j > 0) {
+            p1 = $scope.points[i][j - 1].body;
+            p2 = $scope.points[i][j].body;
+            $scope.constraints.push(new Constraint(p1, p2, k));
+          
+          }
+        }
+      }
+      $scope.points[0][0].body.inverseMass = 0;
+      $scope.points[Math.floor(columns / 2)][0].body.inverseMass = 0;
+      $scope.points[columns - 1][0].body.inverseMass = 0;
+      animate();
+    };
+    $scope.reset();
 
 
     function animate (delta) {
       $scope.ctx.clearRect(0, 0, 500, 500);
       var i, j, pt, constraint;
-      for (i = 0; i < 5; ++i) {
+      for (i = 0; i < iterations; ++i) {
         $scope.world.simulate(0.1);
       }
 
       $scope.constraints.forEach(function (c) {
         c.draw($scope.ctx);
       });
-      for (i = 0; i < $scope.columns; ++i) {
-        for (j = 0; j < $scope.columns; ++j) {
+      for (i = 0; i < columns; ++i) {
+        for (j = 0; j < rows; ++j) {
           pt = $scope.points[i][j];
           pt.draw($scope.ctx);
         }
@@ -97,14 +118,11 @@ angular.module('mctApp')
       $scope.animFrame = window.requestAnimationFrame(animate);
     }
 
-    animate();
 
     function getClosestPoint (x, y) {
       var pt = new Vector3(x, y, 0);
       var min = 100;
       var closestPoint = null;
-      var rows = $scope.rows;
-      var columns = $scope.columns;
       var points = $scope.points;
       var dist, i, j;
 
@@ -125,18 +143,19 @@ angular.module('mctApp')
       var y = e.offsetY;
       selectedPoint = getClosestPoint(x, y);
       selectedPoint.fill = 'red';
+      selectedPoint.body.isSelected = true;
       selectedPoint.body.inverseMass = 0;
     };
     $scope.handleMouseMove = function (e) {
       if (!selectedPoint) {return;}
       var x = e.offsetX;
-      console.log(e.offsetX);
       var y = e.offsetY;
-      console.log(e.offsetY);
 
       selectedPoint.body.moveTo(x, y, 0);
     };
     $scope.handleMouseUp = function (e) {
+      selectedPoint.body.isSelected = null;
+      selectedPoint.fill = 'black';
       selectedPoint = null;
     };
 
