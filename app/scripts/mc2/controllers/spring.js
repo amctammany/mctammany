@@ -14,11 +14,8 @@ angular.module('mctApp')
 
     var Ball = function (x, y, fill) {
       this.body = $scope.world.addParticle(x, y, 0, 1);
-      console.log(this.body);
       this.fill = fill;
       this.draw($scope.ctx);
-    };
-    Ball.prototype.reset = function () {
     };
     Ball.prototype.checkBounds = function () {
       if (this.body.getCurrent().x < 0 || this.body.getCurrent().x > 800 || this.body.position.y < 0 || this.body.position.y > 500) {
@@ -28,12 +25,6 @@ angular.module('mctApp')
       else {
         return false;
       }
-    };
-    Ball.prototype.update = function (delta) {
-      if (this.checkBounds()) { this.reset(); }
-      this.body.addForce(new Vector3($scope.gravity.x, $scope.gravity.y, 0));
-      this.body.integrate(delta);
-      this.draw($scope.ctx);
     };
     Ball.prototype.draw = function (ctx) {
       ctx.fillStyle = this.fill;
@@ -67,13 +58,10 @@ angular.module('mctApp')
     }
     function animate (delta) {
       clearRect();
-      //$scope.world.simulate(.2);
-      $scope.ball1.body.integrate(0.3);
-      $scope.ball2.body.integrate(0.3);
+      $scope.world.simulate(0.2);
       $scope.ball1.draw($scope.ctx);
       $scope.ball2.draw($scope.ctx);
       $scope.spring.draw($scope.ctx);
-      $scope.spring.spring.update(0.3);
       $scope.animFrame = window.requestAnimationFrame(animate);
     }
     animate();
