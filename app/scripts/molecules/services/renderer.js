@@ -64,8 +64,8 @@ angular.module('mctApp')
       var size = src.length;
 
       // X-Axis
-      var cos = Math.cos([angles[0]]);
-      var sin = Math.sin([angles[0]]);
+      var cos = Math.cos(angles[0]);
+      var sin = Math.sin(angles[0]);
 
       for (var i = 0; i < size; i++) {
         dst[i][0] = src[i][0];
@@ -113,8 +113,8 @@ angular.module('mctApp')
       this.angles = [0, 0, 0];
 
       this.rotX = 0.01;
-      this.rotY = 0.00;
-      this.rotZ = 0.0;
+      this.rotY = 0.01;
+      this.rotZ = 0.01;
 
       this.points = [];
       this.atoms = this.molecule.getVertices();
@@ -172,13 +172,13 @@ angular.module('mctApp')
       var ctx = this.ctx;
       ctx.fillStyle = 'black';
       var self = this;
-      this.points.map(function (pt) {
+      this.points.forEach(function (pt) {
         var p = self.convertPointToCanvas(pt);
         ctx.beginPath();
         ctx.arc(p.x, p.y, 8, 0, 6.28, 0);
         ctx.fill();
       });
-      this.lines.map(function (line) {
+      this.lines.forEach(function (line) {
         var p1 = self.convertPointToCanvas(self.points[line[0]]);
         var p2 = self.convertPointToCanvas(self.points[line[1]]);
         ctx.beginPath();

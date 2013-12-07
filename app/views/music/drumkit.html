@@ -1,1 +1,46 @@
 <p>This is the drumkit view.</p>
+<div class="drumkit row">
+	<div class="col-lg-12 well">
+		<div class="row instrument-row" ng-repeat="instrument in instruments">
+			<span class="beat-label col-md-2 col-lg-2">{{instrument}}</span>
+			<div class="col-lg-10">
+				<div class="measure col-md-3 col-lg-3 col-sm-3" ng-repeat="measure in measures">
+					<div class="beat" ng-repeat="beat in measure">
+						<div class="beat-object" ng-click="toggleBeat(instrument, beat)" ng-class="getBeatClass(instrument, beat)"></div>	
+					</div>
+				</div>
+			</div>
+	
+		</div>
+		
+	</div> <!-- /well -->
+</div> <!-- /row -->
+<div class="drumkit-controls row well">
+	<div class="well col-lg-2 col-md-2 col-sm-4">
+		<toggle action="play" on="Stop" off="Play"></toggle>
+		<button class="btn btn-danger" ng-click="clear()">Clear</button>
+	</div>
+
+	<div class="well col-lg-2 col-md-2 col-sm-4">
+		<div class="btn-group" data-toggle="buttons">
+			<label class="btn btn-primary" ng-click="loadRhythm(0)">
+				<input type="radio" name="options" id="demo1" />
+				<b>1</b>
+			</label>
+			<label class="btn btn-primary" ng-click="loadRhythm(1)">
+				<input type="radio" name="options" id="demo2" />
+				<b>2</b>
+			</label>
+		</div>
+	</div>
+
+	
+</div>
+<div class="drumkit-settings row">
+	<div class="col-md-4 col-lg-4 well">
+		<div class="drumkit-settings-inputs well form-horizontal"></div>
+	</div>
+	<div class="col-md-8 col-lg-8 well">
+		<div class="drumkit-settings-knobs well"></div>
+	</div>
+</div>

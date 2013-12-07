@@ -154,9 +154,9 @@ angular.module('mctApp')
       selectedPoint.body.moveTo(x, y, 0);
     };
     $scope.handleMouseUp = function (e) {
+      if (!selectedPoint) {return;}
       selectedPoint.body.isSelected = null;
       selectedPoint.fill = 'black';
       selectedPoint = null;
     };
-
   });
