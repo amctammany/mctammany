@@ -23,7 +23,8 @@ angular.module('mctApp')
       //this.velocity.iadd(this.acceleration.mul(delta));
 
       // Update Position
-      var position = this.current.mul(2).sub(this.previous).add(this.acceleration);
+      // Damping = 0.01
+      var position = this.current.mul(1.99).sub(this.previous.mul(0.99)).add(this.acceleration);
       this.previous = this.current;
       this.current = position;
       //this.position.iadd(this.velocity.mul(delta));
@@ -35,6 +36,14 @@ angular.module('mctApp')
 
     };
 
+    Particle.prototype.getCurrent = function () {
+      return this.current;
+    };
+    Particle.prototype.moveTo = function (x, y, z) {
+      var pos = new Vector3(x, y, z);
+      this.previous = this.current;
+      this.current = pos;
+    };
     Particle.prototype.addForce = function (f) {
       this.forceAccumulator.iadd(f);
     };

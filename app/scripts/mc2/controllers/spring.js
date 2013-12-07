@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mctApp')
-  .controller('SpringCtrl', function ($scope, Particle, Spring, Vector3) {
+  .controller('SpringCtrl', function ($scope, World, Vector3) {
     $scope.canvas = angular.element(document.getElementById('spring-demo'))[0];
     $scope.canvas.width = 800;
     $scope.canvas.height = 500;
@@ -9,16 +9,19 @@ angular.module('mctApp')
     $scope.ctx.fillStyle = '#ddd';
     $scope.ctx.fillRect(0, 0, 800, 500);
 
+    $scope.world = new World();
+
 
     var Ball = function (x, y, fill) {
-      this.particle = new Particle(x, y, 0);
+      this.body = $scope.world.addParticle(x, y, 0, 1);
+      console.log(this.body);
       this.fill = fill;
       this.draw($scope.ctx);
     };
     Ball.prototype.reset = function () {
     };
     Ball.prototype.checkBounds = function () {
-      if (this.particle.current.x < 0 || this.particle.current.x > 800 || this.particle.position.y < 0 || this.particle.position.y > 500) {
+      if (this.body.getCurrent().x < 0 || this.body.getCurrent().x > 800 || this.body.position.y < 0 || this.body.position.y > 500) {
         this.reset();
         return true;
       }
@@ -28,21 +31,21 @@ angular.module('mctApp')
     };
     Ball.prototype.update = function (delta) {
       if (this.checkBounds()) { this.reset(); }
-      this.particle.addForce(new Vector3($scope.gravity.x, $scope.gravity.y, 0));
-      this.particle.integrate(delta);
+      this.body.addForce(new Vector3($scope.gravity.x, $scope.gravity.y, 0));
+      this.body.integrate(delta);
       this.draw($scope.ctx);
     };
     Ball.prototype.draw = function (ctx) {
       ctx.fillStyle = this.fill;
       ctx.beginPath();
-      ctx.arc(this.particle.current.x, this.particle.current.y, 15, 0,  6.24, 0);
-      //ctx.fillRect(this.particle.current.x, this.particle.current.y, 10, 10);
+      ctx.arc(this.body.getCurrent().x, this.body.getCurrent().y, 15, 0,  6.24, 0);
+      //ctx.fillRect(this.body.getCurrent().x, this.body.getCurrent().y, 10, 10);
       ctx.closePath();
       ctx.fill();
     };
 
-    var SpringObj = function (p1, p2, rest, k) {
-      this.spring = new Spring(p1, p2, rest, k);
+    var SpringObj = function (p1, p2, k, rest) {
+      this.spring = $scope.world.addSpringForceGenerator(p1, p2, k, rest);
       this.draw($scope.ctx);
     };
 
@@ -50,22 +53,23 @@ angular.module('mctApp')
       ctx.beginPath();
       ctx.strokeStyle = 'red';
       ctx.lineWidth = 3;
-      ctx.moveTo(this.spring.p1.current.x, this.spring.p1.current.y);
-      ctx.lineTo(this.spring.p2.current.x, this.spring.p2.current.y);
+      ctx.moveTo(this.spring.p1.getCurrent().x, this.spring.p1.getCurrent().y);
+      ctx.lineTo(this.spring.p2.getCurrent().x, this.spring.p2.getCurrent().y);
       ctx.stroke();
     };
     $scope.ball1 = new Ball(250, 100, 'blue');
     $scope.ball2 = new Ball(400, 100, 'green');
-    $scope.spring = new SpringObj($scope.ball1.particle, $scope.ball2.particle, 100, 10);
+    $scope.spring = new SpringObj($scope.ball1.body, $scope.ball2.body, 10, 100);
     function clearRect () {
       $scope.ctx.clearRect(0, 0, 800, 500);
       //$scope.ctx.fillStyle = 'red';
-      //$scope.ctx.fillRect($scope.current.x - 5, $scope.current.y - 5, 10, 10);
+      //$scope.ctx.fillRect($scope.getCurrent().x - 5, $scope.getCurrent().y - 5, 10, 10);
     }
     function animate (delta) {
       clearRect();
-      $scope.ball1.particle.integrate(0.3);
-      $scope.ball2.particle.integrate(0.3);
+      //$scope.world.simulate(.2);
+      $scope.ball1.body.integrate(0.3);
+      $scope.ball2.body.integrate(0.3);
       $scope.ball1.draw($scope.ctx);
       $scope.ball2.draw($scope.ctx);
       $scope.spring.draw($scope.ctx);
