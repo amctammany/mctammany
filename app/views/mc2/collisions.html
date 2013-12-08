@@ -1,0 +1,26 @@
+<p>This is the collisions view.</p>
+
+<div class="row" >
+  <div class="col-lg-3 col-md-3 well">
+    <div class="input-group">
+      <span class="input-group-addon">Number Balls</span>
+      <input class="form-control" type="number" ng-model="numBalls" />
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">Restitution</span>
+      <input class="form-control" type="number" ng-model="restitution" />
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon">Max Speed</span>
+      <input class="form-control" type="number" ng-model="maxSpeed" />
+    </div>
+    <button ng-click="reset()">Reset</button>
+  </div>
+
+  <div class="col-lg-9 col-md-9 well">
+    <div class="row center">
+      <canvas id="collisions-demo" ng-mousedown="handleMouseDown($event)", ng-mousemove="handleMouseMove($event)" ng-mouseup="handleMouseUp($event)">
+      </canvas>
+    </div>
+  </div>
+</div>

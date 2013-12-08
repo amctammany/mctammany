@@ -44,7 +44,7 @@ describe('Service: Particle', function () {
     particle.acceleration.x = x;
     particle.acceleration.y = y;
     particle.acceleration.z = z;
-    particle.integrate(1);
+    particle.integrate(1, 1);
     expect(particle.current.x).toBe(x + x);
     expect(particle.current.y).toBe(y + y);
     expect(particle.current.z).toBe(z + z);
