@@ -12,7 +12,7 @@ describe('Service: Particle', function () {
     x = 5;
     y = 10;
     z = 15;
-    particle = new Particle(x, y, z);
+    particle = new Particle('world', x, y, z);
 
   }));
 
@@ -27,12 +27,12 @@ describe('Service: Particle', function () {
   });
 
   it('should instantiate particle with mass', function () {
-    var p = new Particle(x, y, z, 1);
+    var p = new Particle('world', x, y, z, 1);
     expect(p.mass).toBe(1);
     expect(p.inverseMass).toBe(1);
   });
   it('should instantiate particle with no mass', function () {
-    var p = new Particle(x, y, z, 0);
+    var p = new Particle('world', x, y, z, 0);
     expect(p.mass).toBe(0);
     expect(p.inverseMass).toBe(0);
   });

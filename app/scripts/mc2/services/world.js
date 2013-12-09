@@ -7,11 +7,12 @@ angular.module('mctApp')
       this.forceRegistry = [];
       this.gravity = null;
       this.damping = 0.01;
+      this.preserveImpulse = true;
     
     };
 
     World.prototype.addParticle = function (x, y, z, mass) {
-      var particle = new Particle(x, y, z, mass);
+      var particle = new Particle(this, x, y, z, mass);
       this.particles.push(particle);
       return particle;
     };
@@ -46,6 +47,13 @@ angular.module('mctApp')
         
           if (length < target) {
             var factor = (length - target) / length;
+            var v1 = particle.velocity;
+            var v2 = other.velocity;
+
+            if (this.preserveImpulse) {
+              
+              //return;
+            }
             particle.addForce(diff.mul(factor * -0.5));
             other.addForce(diff.mul(factor * 0.5));
           }

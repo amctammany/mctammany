@@ -12,7 +12,8 @@ angular.module('mctApp')
     $scope.restitution = 1;
 
     $scope.world = new World();
-    $scope.world.damping = 0;
+    $scope.world.damping = 0.00;
+    $scope.world.addGravity(0, 0, 0);
     $scope.world.addBoundaries({
       x: 0,
       y: 0,
@@ -54,7 +55,9 @@ angular.module('mctApp')
 
     function animate (delta) {
       clearRect();
-      $scope.world.simulate(0.2);
+      for (var i = 0; i < 2; ++i) {
+        $scope.world.simulate(0.2);
+      }
       $scope.balls.forEach(function (ball) {
         ball.draw($scope.ctx);
       });

@@ -2,7 +2,8 @@
 
 angular.module('mctApp')
   .factory('Particle', function (Vector3) {
-    var Particle = function (x, y, z, mass) {
+    var Particle = function (world, x, y, z, mass) {
+      this.world = world;
       this.current = new Vector3(x, y, z);
       this.previous = new Vector3(x, y, z);
       this.velocity = new Vector3(0, 0, 0);

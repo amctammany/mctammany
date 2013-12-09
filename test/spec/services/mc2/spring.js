@@ -10,8 +10,8 @@ describe('Service: Spring', function () {
   beforeEach(inject(function (_Spring_, _Particle_) {
     Spring = _Spring_;
     Particle = _Particle_;
-    p1 = new Particle(10, 10, 0);
-    p2 = new Particle(30, 10, 0);
+    p1 = new Particle('world', 10, 10, 0);
+    p2 = new Particle('world', 30, 10, 0);
     spring = new Spring(p1, p2, 10, 1);
   }));
 
