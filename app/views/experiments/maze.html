@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="row center">
-        <button class="btn" ng-click="generateBlankMaze()">Reset</button>
+        <button class="btn" ng-click="maze.reset()">Reset</button>
       </div>
 
       <hr />
@@ -41,7 +41,7 @@
   </div>
 
   <div class="col-lg-9 col-md-9">
-    <div class="well center" ng-init="generateBlankMaze()">
+    <div class="well center" ng-init="newMaze()">
       <canvas id="maze-canvas" ng-mousedown="handleMouseDown($event)" ng-mousemove="handleMouseMove($event)"></canvas>
     </div>
   </div>
