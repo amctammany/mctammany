@@ -43,6 +43,14 @@ angular.module('mctApp', ['ngRoute', 'ngSanitize', 'ngResource'])
         templateUrl: 'views/experiments/balldrop.html',
         controller: 'BallDropCtrl'
       })
+      .when('/experiments/maze', {
+        templateUrl: 'views/experiments/maze.html',
+        controller: 'MazeCtrl'
+      })
+      .when('/experiments/marbles', {
+        templateUrl: 'views/experiments/marbles.html',
+        controller: 'MarblesCtrl'
+      })
       .when('/mc2', {
         templateUrl: 'views/mc2/mc2.html',
         controller: 'Mc2Ctrl'

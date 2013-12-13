@@ -19,7 +19,7 @@ angular.module('mctApp')
       this.draw($scope.ctx);
     };
     Ball.prototype.reset = function () {
-      this.particle = new Particle($scope.position.x, $scope.position.y);
+      this.particle = new Particle('world', $scope.position.x, $scope.position.y);
       this.particle.addForce(new Vector3($scope.acceleration.x, $scope.acceleration.y, 0));
     };
     Ball.prototype.checkBounds = function () {

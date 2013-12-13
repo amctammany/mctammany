@@ -15,7 +15,7 @@ angular.module('mctApp')
       columns: 15,
       gravity: 0.1,
       k: 25,
-      iterations: 15,
+      iterations: 10,
     };
 
     $scope.$watch('opts', function () {
@@ -62,6 +62,7 @@ angular.module('mctApp')
       iterations = $scope.opts.iterations;
 
       $scope.world = new World();
+      $scope.world.damping = 0.01;
       $scope.world.addGravity(0, gravity, 0);
       $scope.points = [];
       $scope.constraints = [];
@@ -103,7 +104,7 @@ angular.module('mctApp')
       $scope.ctx.clearRect(0, 0, 500, 500);
       var i, j, pt, constraint;
       for (i = 0; i < iterations; ++i) {
-        $scope.world.simulate(0.1);
+        $scope.world.simulate(0.5);
       }
 
       $scope.constraints.forEach(function (c) {

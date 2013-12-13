@@ -1,0 +1,59 @@
+<p>This is the maze view.</p>
+<div class="row" ng-init="init()">
+
+  <div class="col-lg-3 col-md-3">
+    <div class="well">
+      <div class="row center">
+        <div class="col-lg-6 col-md-6">
+          <button class="btn" ng-click="addStart()">Add Start</button>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <button class="btn" ng-click="addEnd()">Add End</button>
+        </div>
+      </div>
+
+      <div class="row center well">
+        <div class="input-group">
+          <span class="input-group-addon">Rows</span>
+          <input class="form-control" type="number" ng-model="rows" />
+        </div>
+        
+        <div class="input-group">
+          <span class="input-group-addon">Columns</span>
+          <input class="form-control" type="number" ng-model="columns" />
+        </div>
+      </div>
+      <div class="row center">
+        <button class="btn" ng-click="generateBlankMaze()">Reset</button>
+      </div>
+
+      <hr />
+
+      <div class="row center">
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="maze in mazes">
+            {{maze}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  
+  </div>
+
+  <div class="col-lg-9 col-md-9">
+    <div class="well center" ng-init="generateBlankMaze()">
+      <canvas id="maze-canvas" ng-mousedown="handleMouseDown($event)" ng-mousemove="handleMouseMove($event)"></canvas>
+    </div>
+  </div>
+    <!--<div class="maze">-->
+        
+      <!--<div class="maze-row" ng-repeat="row in cells">-->
+        <!--<div class="maze-column" ng-repeat="cell in row">-->
+          <!--<cell row="{{cell.row}}" column="{{cell.column}}"></cell>-->
+        <!--<div>-->
+      <!--</div>-->
+      
+    <!--</div>-->
+
+  </div>
+</div>

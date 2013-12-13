@@ -1,0 +1,14 @@
+<p>This is the marbles view.</p>
+<div class="well center">
+  <div class="row">
+  
+    <button ng-click="newGame()">New Game</button>
+    <b>Score:</b> {{game.score}}
+  </div>
+  <div class="row">
+  
+    <canvas id="marbles-canvas" ng-click="handleClick($event)" ng-init="newGame()">
+  
+    </canvas>
+  </div>
+</div>

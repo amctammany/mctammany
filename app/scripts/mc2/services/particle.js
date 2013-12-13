@@ -8,7 +8,7 @@ angular.module('mctApp')
       this.previous = new Vector3(x, y, z);
       this.velocity = new Vector3(0, 0, 0);
       this.acceleration = new Vector3(0, 0, 0);
-      this.damping = 1;
+      this.damping = 0.00;
 
       this.forceAccumulator = new Vector3(0, 0, 0);
       this.mass = (mass === undefined) ? 1 : mass;
@@ -26,7 +26,8 @@ angular.module('mctApp')
     
     };
 
-    Particle.prototype.integrate = function (delta, damping) {
+    Particle.prototype.integrate = function (delta) {
+      var damping = this.damping;
       if (this.inverseMass === 0) {return;}
       // Work out acceleration
       this.acceleration.iadd(this.forceAccumulator.mul(this.inverseMass * (delta * delta)));
