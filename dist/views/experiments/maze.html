@@ -24,11 +24,14 @@
         </div>
       </div>
       <div class="row center">
-        <div class="col-lg-6 col-md-6">
+        <div class="col-lg-4 col-md-4">
           <button class="btn" ng-click="maze.reset()">Reset</button>
         </div>
-        <div class="col-lg-6 col-md-6">
+        <div class="col-lg-4 col-md-4">
           <button class="btn" ng-click="maze.solve()">Solve</button>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <button class="btn btn-danger" ng-click="maze.stop()">Stop</button>
         </div>
       </div>
 
@@ -42,7 +45,12 @@
           </div>
         </div>
         <div class="row">
-          <button class="btn" ng-click="saveMaze()">Save</button>
+          <div class="col-lg-6 col-md-6">
+            <button class="btn" ng-click="init()">New</button>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <button class="btn" ng-click="saveMaze()">Save</button>
+          </div>
         </div>
         <div class="row">
           <ul class="list-group">

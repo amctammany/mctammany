@@ -17,11 +17,13 @@ angular.module('mctApp')
       $scope.maze = new Maze(canvas, $scope.columns, $scope.rows);
       cellWidth = $scope.maze.cellWidth;
       cellHeight = $scope.maze.cellHeight;
+      $scope.canvas = canvas;
     };
 
 
     $scope.saveMaze = function () {
       var config = $scope.maze.generateConfig();
+      if (!config) {return;}
       if ($scope.mazeStore) {
         $scope.mazeStore.config = config;
         $scope.mazeStore.$save();
@@ -36,12 +38,21 @@ angular.module('mctApp')
       $scope.name = maze.name;
       var config = JSON.parse(maze.config);
       $scope.maze.load(config);
-    
+    };
+
+    $scope.solve = function () {
+      $scope.maze.solve();
+    };
+
+    $scope.stop = function () {
+      $scope.maze.stop();
     };
 
 
 
     $scope.handleMouseDown = function (e) {
+      var cellWidth = $scope.maze.cellWidth;
+      var cellHeight = $scope.maze.cellHeight;
       var column = Math.floor(e.offsetX / cellWidth);
       var row = Math.floor(e.offsetY / cellHeight);
       var cell = $scope.maze.findCell(column, row);
@@ -70,6 +81,8 @@ angular.module('mctApp')
       $scope.maze.draw();
     };
     $scope.handleMouseMove = function (e) {
+      var cellWidth = $scope.maze.cellWidth;
+      var cellHeight = $scope.maze.cellHeight;
       var column = Math.floor(e.offsetX / cellWidth);
       var row = Math.floor(e.offsetY / cellHeight);
       var cell = $scope.maze.findCell(column, row);
