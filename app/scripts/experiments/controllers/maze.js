@@ -1,18 +1,12 @@
 'use strict';
 
 angular.module('mctApp')
-  .controller('MazeCtrl', function ($scope, Maze) {
+  .controller('MazeCtrl', function ($scope, Maze, MazeStore) {
     $scope.rows = 10;
     $scope.columns = 10;
 
-    $scope.mazes = ['hi', 'you7', 'foo'];
-
-
+    $scope.mazes = MazeStore.query();
     var cellWidth, cellHeight;
-
-    var defaultFill = 'lightsteelblue';
-    var startFill = 'lightgreen';
-    var endFill = 'red';
     $scope.init = function () {
     
       var canvas = angular.element(document.getElementById('maze-canvas'))[0];
@@ -26,6 +20,24 @@ angular.module('mctApp')
     };
 
 
+    $scope.saveMaze = function () {
+      var config = $scope.maze.generateConfig();
+      if ($scope.mazeStore) {
+        $scope.mazeStore.config = config;
+        $scope.mazeStore.$save();
+      } else {
+        var maze = new MazeStore({name: $scope.name, config: config});
+        maze.$save();
+      }
+    };
+
+    $scope.loadMaze = function (maze) {
+      $scope.mazeStore = maze;
+      $scope.name = maze.name;
+      var config = JSON.parse(maze.config);
+      $scope.maze.load(config);
+    
+    };
 
 
 
@@ -71,13 +83,6 @@ angular.module('mctApp')
 
       $scope.maze.draw();
     
-    };
-
-    var draw = function draw () {
-      $scope.ctx.clearRect(0, 0, $scope.canvas.width, $scope.canvas.height);
-      $scope.cells.forEach(function (cell) {
-        cell.draw($scope.ctx);
-      });
     };
 
     $scope.addStart = function () {

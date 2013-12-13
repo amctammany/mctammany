@@ -24,19 +24,35 @@
         </div>
       </div>
       <div class="row center">
-        <button class="btn" ng-click="maze.reset()">Reset</button>
+        <div class="col-lg-6 col-md-6">
+          <button class="btn" ng-click="maze.reset()">Reset</button>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <button class="btn" ng-click="maze.solve()">Solve</button>
+        </div>
       </div>
 
       <hr>
 
-      <div class="row center">
-        <ul class="list-group">
-          <li class="list-group-item" ng-repeat="maze in mazes">
-            {{maze}}
-          </li>
-        </ul>
+      <div class="well center">
+        <div class="row">
+          <div class="input-group">
+            <span class="input-group-addon">Name</span>
+            <input class="form-control" type="text" ng-model="name">
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn" ng-click="saveMaze()">Save</button>
+        </div>
+        <div class="row">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="maze in mazes" ng-click="loadMaze(maze)">
+              {{maze.name}}
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+     </div>
   
   </div>
 

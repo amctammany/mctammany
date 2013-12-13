@@ -19,7 +19,13 @@ angular.module('mctApp')
       return lowest;
     };
 
+    var Path = function (maze, start) {
+      this.maze = maze;
+      this.start = start;
     
+    };
+    
+// Maze {
     var Maze = function (canvas, columns, rows) {
       this.rows = rows;
       this.columns = columns;
@@ -44,6 +50,53 @@ angular.module('mctApp')
       return cell;
     };
 
+    Maze.prototype.generateConfig = function () {
+      if (!this.end || !this.start) {
+        console.log('incomplete maze');
+        return;
+      }
+      var cellData = this.cells.map(function (cell) {
+        return {
+          row: cell.row,
+          column: cell.column,
+          left: cell.left,
+          right: cell.right,
+          top: cell.top,
+          bottom: cell.bottom
+        };
+      });
+
+      var data = {
+        rows: this.rows,
+        columns: this.columns,
+        start: {column: this.start.column, row: this.start.row},
+        end: {column: this.end.column, row: this.end.row},
+        cells: cellData
+      };
+      //var config = JSON.stringify(data);
+      return JSON.stringify(data);
+    };
+
+    Maze.prototype.load = function (config) {
+      console.log(config);
+      this.columns = config.columns;
+      this.rows = config.rows;
+      this.cells = new Array(this.rows * this.columns);
+      var self = this;
+      var cellCopy;
+      config.cells.forEach(function (cell) {
+        cellCopy = self.addCell(cell.column, cell.row);
+        cellCopy.top = cell.top;
+        cellCopy.bottom = cell.bottom;
+        cellCopy.left = cell.left;
+        cellCopy.right = cell.right;
+        self.cells[index(cell.column, cell.row)] = cellCopy;
+      });
+      this.start = this.cells[index(config.start.column, config.start.row)];
+      this.end = this.cells[index(config.end.column, config.end.row)];
+      this.draw();
+    
+    };
     Maze.prototype.reset = function () {
       var row, column, cell;
       this.cellWidth = this.canvas.width / this.columns;
@@ -75,6 +128,9 @@ angular.module('mctApp')
       });
     };
 
+// }
+
+// Cell {
     var Cell = function (column, row) {
       this.column = column;
       this.row = row;
@@ -90,7 +146,7 @@ angular.module('mctApp')
 
     };
 
-// Remove Wall {
+  // Remove Wall {
     Cell.prototype.removeWall = function (side) {
       var neighbor;
       var maze = this.maze;
@@ -127,9 +183,9 @@ angular.module('mctApp')
 
 
     };
-// }
+  // }
 
-// Draw {
+  // Draw {
     Cell.prototype.draw = function (ctx) {
       ctx.lineWidth = 1;
       var cellWidth = this.maze.cellWidth;
@@ -179,6 +235,7 @@ angular.module('mctApp')
 
     };
 
+    // }
 // }
 
     return Maze;
