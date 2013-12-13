@@ -14,6 +14,20 @@ angular.module('mctApp')
       return lowest;
     };
 
+    var BranchPoint = function (path, cell) {
+      this.path = path;
+      this.cell = cell;
+      this.cell.isBranchPoint = true;
+      this.branches = [];
+    };
+
+    BranchPoint.prototype.getChoices = function () {
+      var history = this.path.history;
+      return this.branches.filter(function (branch) {
+        return history.indexOf(branch) < 0;
+      });
+    };
+
     var Path = function (maze, start, history) {
       this.maze = maze;
       this.start = start;
@@ -53,24 +67,39 @@ angular.module('mctApp')
         }
       }
       if (choices.length > 1) {
-        this.branchPoints.push(this.cell);
+        var branchPoint = new BranchPoint(this, this.cell);
+        branchPoint.branches = choices;
+        this.branchPoints.push(branchPoint);
+
       }
       var choice = choices[Math.floor(Math.random() * choices.length)];
       return choice;
     };
     Path.prototype.travelTo = function (cell) {
-      if (this.maze.stopped) {return;}
+      //console.log(this.branchPoints);
+      if (!this.maze.solveInProgress) {return;}
       if (cell === this.maze.end) {
         window.alert('Win');
         return;
       }
       if (!cell) {
+        console.log(this.branchPoints);
         var lastBranch = this.branchPoints[this.branchPoints.length - 1];
+        console.log(lastBranch.getChoices());
+        var i = 1;
+        while (lastBranch.getChoices().length === 0) {
+          lastBranch = this.branchPoints[this.branchPoints.length - i];
+          i++;
+          if (i > this.branchPoints.length) {
+            window.alert('No solution found');
+            this.maze.stopped = true;
+            return false;
+          }
+        }
         var index = this.history.indexOf(lastBranch);
         var history = this.history.splice(0, index);
-        lastBranch.fill = 'green';
         this.maze.draw();
-        new Path(this.maze, lastBranch, this.history);
+        this.travelTo(lastBranch.cell);
         return;
       }
       this.history.push(this.cell);
@@ -93,6 +122,7 @@ angular.module('mctApp')
       this.defaultFill = 'lightsteelblue';
       this.startFill = 'lightgreen';
       this.endFill = 'red';
+      this.branchPointFill = 'green';
       if (canvas) {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext('2d');
@@ -104,11 +134,12 @@ angular.module('mctApp')
     };
 
     Maze.prototype.solve = function () {
-      this.stopped = false;
+      if (this.solveInProgress) {return;}
+      this.solveInProgress = true;
       var path = new Path(this, this.start);
     };
     Maze.prototype.stop = function () {
-      this.stopped = true;
+      this.solveInProgress = false;
     };
     Maze.prototype.getIndex = function (column, row) {
       return column + (row * this.rows);
@@ -273,6 +304,9 @@ angular.module('mctApp')
         ctx.fillStyle = this.maze.startFill;
       } else if (this.maze.end === this) {
         ctx.fillStyle = this.maze.endFill;
+      } else if (this.isBranchPoint) {
+        ctx.fillStyle = this.maze.branchPointFill;
+      
       } else {
         ctx.fillStyle = this.fill;
       }
