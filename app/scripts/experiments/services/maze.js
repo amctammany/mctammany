@@ -28,11 +28,10 @@ angular.module('mctApp')
       });
     };
 
-    var Path = function (maze, start, history) {
+    var Path = function (maze, start) {
       this.maze = maze;
       this.start = start;
-      this.history = history ? history : [];
-      this.previous = history ? history[history.length - 1] : this.start;
+      this.history = [];
       this.branchPoints = [];
       this.cell = start;
       var choice = this.choosePath();
@@ -44,25 +43,25 @@ angular.module('mctApp')
       var next;
       if (this.cell.left) {
         next = this.maze.findCell(this.cell.column - 1, this.cell.row);
-        if (next !== this.previous && this.history.indexOf(next) < 0) {
+        if (this.history.indexOf(next) < 0) {
           choices.push(next);
         }
       }
       if (this.cell.right) {
         next = this.maze.findCell(this.cell.column + 1, this.cell.row);
-        if (next !== this.previous  && this.history.indexOf(next) < 0) {
+        if (this.history.indexOf(next) < 0) {
           choices.push(next);
         }
       }
       if (this.cell.top) {
         next = this.maze.findCell(this.cell.column, this.cell.row - 1);
-        if (next !== this.previous  && this.history.indexOf(next) < 0) {
+        if (this.history.indexOf(next) < 0) {
           choices.push(next);
         }
       }
       if (this.cell.bottom) {
         next = this.maze.findCell(this.cell.column, this.cell.row + 1);
-        if (next !== this.previous  && this.history.indexOf(next) < 0) {
+        if (this.history.indexOf(next) < 0) {
           choices.push(next);
         }
       }
@@ -76,36 +75,34 @@ angular.module('mctApp')
       return choice;
     };
     Path.prototype.travelTo = function (cell) {
-      //console.log(this.branchPoints);
       if (!this.maze.solveInProgress) {return;}
       if (cell === this.maze.end) {
         window.alert('Win');
+        this.maze.solveInProgress = false;
         return;
       }
       if (!cell) {
-        console.log(this.branchPoints);
         var lastBranch = this.branchPoints[this.branchPoints.length - 1];
-        console.log(lastBranch.getChoices());
         var i = 1;
-        while (lastBranch.getChoices().length === 0) {
+        while (lastBranch) {
+          if (lastBranch.getChoices().length > 0) {
+          
+            this.maze.draw();
+            this.travelTo(lastBranch.cell);
+            return;
+          }
           lastBranch = this.branchPoints[this.branchPoints.length - i];
-          i++;
           if (i > this.branchPoints.length) {
             window.alert('No solution found');
-            this.maze.stopped = true;
+            this.maze.solveInProgress = false;
             return false;
           }
+          i++;
         }
-        var index = this.history.indexOf(lastBranch);
-        var history = this.history.splice(0, index);
-        this.maze.draw();
-        this.travelTo(lastBranch.cell);
-        return;
       }
       this.history.push(this.cell);
-      this.previous = this.cell;
       this.cell = cell;
-      this.cell.fill = 'white';
+      this.cell.visited = true;
       var self = this;
       this.maze.draw();
       window.setTimeout(function () {
@@ -123,6 +120,7 @@ angular.module('mctApp')
       this.startFill = 'lightgreen';
       this.endFill = 'red';
       this.branchPointFill = 'green';
+      this.visitedFill = 'white';
       if (canvas) {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext('2d');
@@ -135,6 +133,7 @@ angular.module('mctApp')
 
     Maze.prototype.solve = function () {
       if (this.solveInProgress) {return;}
+      this.reset();
       this.solveInProgress = true;
       var path = new Path(this, this.start);
     };
@@ -142,10 +141,10 @@ angular.module('mctApp')
       this.solveInProgress = false;
     };
     Maze.prototype.getIndex = function (column, row) {
-      return column + (row * this.rows);
+      return column + (row * this.columns);
     };
     Maze.prototype.findCell = function (column, row) {
-      return this.cells[column + (row * this.rows)];
+      return this.cells[column + (row * this.columns)];
     };
 
     Maze.prototype.generateConfig = function () {
@@ -153,6 +152,7 @@ angular.module('mctApp')
         console.log('incomplete maze');
         return;
       }
+      this.changed = false;
       var cellData = this.cells.map(function (cell) {
         return {
           row: cell.row,
@@ -171,11 +171,13 @@ angular.module('mctApp')
         end: {column: this.end.column, row: this.end.row},
         cells: cellData
       };
+      this.loadData = data;
       //var config = JSON.stringify(data);
       return JSON.stringify(data);
     };
 
     Maze.prototype.load = function (config) {
+      this.solveInProgress = false;
       this.loadData = config;
       console.log(config);
       this.columns = config.columns;
@@ -201,6 +203,10 @@ angular.module('mctApp')
     
     };
     Maze.prototype.reset = function () {
+      if (this.changed) {
+        window.alert('Reset will destroy new data');
+        return false;
+      }
       if (this.loadData) {
         this.load(this.loadData);
         return;
@@ -211,10 +217,11 @@ angular.module('mctApp')
 
 
       this.cells = new Array(this.rows * this.columns);
-      for (row = 0; row < this.rows; ++row) {
-        for (column = 0; column < this.columns; ++column) {
+      console.log(this.columns);
+      console.log(this.rows);
+      for (row = 0; row < this.rows; row++) {
+        for (column = 0; column < this.columns; column++) {
           cell = this.addCell(column, row);
-          this.cells[this.getIndex(column, row)] = cell;
         }
       }
       this.draw();
@@ -223,6 +230,7 @@ angular.module('mctApp')
     Maze.prototype.addCell = function (column, row) {
       var cell = new Cell(column, row);
       cell.maze = this;
+      this.cells[this.getIndex(column, row)] = cell;
       //this.cells[index(column, row)] = cell;
       return cell;
     };
@@ -252,6 +260,7 @@ angular.module('mctApp')
 
   // Remove Wall {
     Cell.prototype.removeWall = function (side) {
+      this.maze.changed = true;
       var neighbor;
       var maze = this.maze;
       if (side === 'left') {
@@ -265,7 +274,6 @@ angular.module('mctApp')
       if (side === 'right') {
         if (this.column + 1 >= maze.columns) { return; }
         neighbor = maze.findCell(this.column + 1, this.row);
-        console.log(neighbor);
         if (neighbor) {
           this.right = this.right ? false : true;
           neighbor.left = neighbor.left ? false : true;
@@ -290,6 +298,7 @@ angular.module('mctApp')
           neighbor.top = neighbor.top ? false : true;
         }
       }
+      console.log(this);
 
 
     };
@@ -306,7 +315,8 @@ angular.module('mctApp')
         ctx.fillStyle = this.maze.endFill;
       } else if (this.isBranchPoint) {
         ctx.fillStyle = this.maze.branchPointFill;
-      
+      } else if (this.visited) {
+        ctx.fillStyle = this.maze.visitedFill;
       } else {
         ctx.fillStyle = this.fill;
       }

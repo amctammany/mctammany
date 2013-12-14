@@ -6,7 +6,6 @@ angular.module('mctApp')
     $scope.columns = 10;
 
     $scope.mazes = MazeStore.query();
-    var cellWidth, cellHeight;
     $scope.init = function () {
     
       var canvas = angular.element(document.getElementById('maze-canvas'))[0];
@@ -15,12 +14,21 @@ angular.module('mctApp')
       canvas.height = 700;
 
       $scope.maze = new Maze(canvas, $scope.columns, $scope.rows);
-      cellWidth = $scope.maze.cellWidth;
-      cellHeight = $scope.maze.cellHeight;
       $scope.canvas = canvas;
     };
 
+    $scope.deleteMaze = function (maze) {
+      var confirm = window.confirm('Delete maze: ' + maze.name);
+      if (!confirm) {return;}
+      maze.$delete();
+      $scope.mazes = MazeStore.query();
+      return false;
+    };
 
+    $scope.activeMaze = function (maze) {
+      if (maze === $scope.mazeStore) {return 'active';}
+      else {return '';}
+    };
     $scope.saveMaze = function () {
       var config = $scope.maze.generateConfig();
       if (!config) {return;}
@@ -31,6 +39,7 @@ angular.module('mctApp')
         var maze = new MazeStore({name: $scope.name, config: config});
         maze.$save();
       }
+      $scope.mazes = MazeStore.query();
     };
 
     $scope.loadMaze = function (maze) {
@@ -38,6 +47,8 @@ angular.module('mctApp')
       $scope.name = maze.name;
       var config = JSON.parse(maze.config);
       $scope.maze.load(config);
+      $scope.columns = $scope.maze.columns;
+      $scope.rows = $scope.maze.rows;
     };
 
     $scope.solve = function () {
@@ -53,8 +64,8 @@ angular.module('mctApp')
     $scope.handleMouseDown = function (e) {
       var cellWidth = $scope.maze.cellWidth;
       var cellHeight = $scope.maze.cellHeight;
-      var column = Math.floor(e.offsetX / cellWidth);
-      var row = Math.floor(e.offsetY / cellHeight);
+      var column = Math.floor((e.offsetX - 1)/ cellWidth);
+      var row = Math.floor((e.offsetY - 1) / cellHeight);
       var cell = $scope.maze.findCell(column, row);
       if ($scope.maze.startSelection) {
         $scope.maze.startSelection = false;
