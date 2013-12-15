@@ -3,7 +3,22 @@ var mongoose = require('mongoose');
     //_ = require('underscore');
 module.exports = function (app) {
 	var	Post = mongoose.model('Post');
-  //var Tag = mongoose.model('Tag');
+  var Tag = mongoose.model('Tag');
+
+  function cullTags () {
+    Tag.find()
+      .populate('posts')
+      .exec(function (err, tags) {
+        tags.forEach(function (tag) {
+          if (tag.posts.length === 0) {
+            console.log('Tag: ' + tag + ' has no posts ');
+            tag.remove(function (err, removedTag) {
+              console.log(removedTag);
+            });
+          }
+        });
+      });
+  }
 // GET /posts => Index
   app.get('/posts', function (req, res) {
     Post.find()
@@ -45,6 +60,7 @@ module.exports = function (app) {
       if (err) {console.log(err);}
       res.send(post);
     });
+    cullTags();
   });
 // POST /posts => Create
   app.post('/posts', function (req, res) {

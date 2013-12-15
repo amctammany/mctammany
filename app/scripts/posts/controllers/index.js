@@ -4,11 +4,6 @@ angular.module('mctApp')
   .controller('PostsCtrl', function ($scope, $filter, Post, Tag) {
     $scope.query = '';
     $scope.selectedTags = [];
-    $scope.demoPosts = [
-      {title: 'First Post', content: 'Foo!', tags: ['JS', 'Linux']},
-      {title: 'Second Post', content: 'Foo!', tags: ['Python', 'Linux']},
-      {title: 'Third Post', content: 'Foo!', tags: ['JS', 'Ubuntu']},
-    ];
     $scope.posts = Post.query();
     $scope.tags = Tag.query();
 

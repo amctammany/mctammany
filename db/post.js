@@ -1,6 +1,7 @@
 'use strict';
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+	Schema = mongoose.Schema,
+  _ = require('underscore');
 
 var PostSchema = new Schema({
 	title: {type: String, required: true},
@@ -21,11 +22,11 @@ PostSchema.methods.parseTags = function (cb) {
   var findOrCreateTag = function (name) {
     mongoose.model('Tag').findOneAndUpdate({name: name}, {name: name}, {upsert: true}, function (err, tag) {
       if (err) {console.log(err);}
-      //if (!_.contains(tag.posts, self._id)) {
-        //console.log('pushing post to tag');
-        //tag.posts.push(self);
-        //tag.save();
-      //}
+      if (!_.contains(tag.posts, self._id)) {
+        console.log('pushing post to tag');
+        tag.posts.push(self);
+        tag.save();
+      }
       self.tags.push(tag);
       if (self.tags.length === tagArray.length) {
         cb();
