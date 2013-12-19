@@ -3,14 +3,16 @@
 angular.module('mctApp')
   .factory('World', function (Particle, Spring, Gravity, Boundary) {
     var World = function () {
+      this.reset();
+    };
+
+    World.prototype.reset = function () {
       this.particles = [];
       this.forceRegistry = [];
       this.gravity = null;
       this.damping = 0.01;
       this.preserveImpulse = true;
-    
     };
-
     World.prototype.addParticle = function (x, y, z, mass) {
       var particle = new Particle(this, x, y, z, mass);
       this.particles.push(particle);

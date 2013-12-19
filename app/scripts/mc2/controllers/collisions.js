@@ -12,7 +12,7 @@ angular.module('mctApp')
     $scope.restitution = 1;
 
     $scope.world = new World();
-    $scope.world.damping = 0.00;
+    $scope.world.damping = 0.01;
     $scope.world.addGravity(0, 0, 0);
     $scope.world.addBoundaries({
       x: 0,
@@ -33,6 +33,8 @@ angular.module('mctApp')
       ctx.fill();
     };
     $scope.reset = function () {
+      if ($scope.animFrame) {window.cancelAnimationFrame($scope.animFrame);}
+      $scope.world.reset();
       clearRect();
       $scope.balls = [];
       var ball, i, x, y, accX, accY;

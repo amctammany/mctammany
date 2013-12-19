@@ -1,0 +1,29 @@
+<p>This is the scrabble view.</p>
+
+<span ng-hide="dict">Loading Dictionary</span>
+<div class="row" ng-init="init()" ng-show="dict">
+  <b>Words Length: </b><i>{{words.length}}</i>
+
+  <div class="input-group">
+    <span class="input-group-addon">Letters: </span>
+    <input class="form-control" type="text" ng-model="searchLetters">
+    
+  </div>
+</div>
+<!--<input type="file" file-select="onFileSelect($files)" />-->
+<!--<progress value="{{progress}}"></progress>-->
+<!--<hr />-->
+<!--<label for="">Name:</label>-->
+<!--<input type="text" ng-model="dictName" />-->
+<!--<button class="btn btn-submit" ng-click="saveDictionary()">Save Dictionary</button>-->
+<!--<hr />-->
+
+<!--<select ng-model="selectedDictionary" ng-options="d.name for d in dictionaries">-->
+<!--</select>-->
+<!--<button class="btn btn-submit" ng-click="loadDictionary()">Load</button>-->
+<!--<hr />-->
+<!--<b>Length</b> <i>{{words.length}}</i>-->
+
+<!--<ul ng-repeat="word in words track by $index">-->
+  <!--<li>{{word}}</li>-->
+<!--</ul>-->
