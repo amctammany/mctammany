@@ -5,11 +5,26 @@
   <b>Words Length: </b><i>{{words.length}}</i>
 
   <div class="input-group">
-    <span class="input-group-addon">Letters: </span>
-    <input class="form-control" type="text" ng-model="searchLetters">
-    
+    <label for="">Dictionary Words</label>
+    <textarea class="form-control col-lg-12 col-md-12" ng-model="wordList" rows="15"></textarea>
   </div>
+  <button class="btn btn-submit" ng-click="loadFromDictionary()">Load</button>
+  <button class="btn btn-submit" ng-click="encodeDictionary()">Encode</button>
+  <hr>
+  <div class="input-group">
+    <label for="">Encoded Dictionary</label>
+    <textarea class="form-control" ng-model="encodedDictionary"></textarea>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-addon">Word: </span>
+    <input class="form-control" type="text" ng-model="search">
+  </div>
+  <button class="btn btn-submit" ng-click="searchDictionary()">Search</button>
+  <button class="btn btn-submit" ng-click="test()">Test</button>
 </div>
+
+
 <!--<input type="file" file-select="onFileSelect($files)" />-->
 <!--<progress value="{{progress}}"></progress>-->
 <!--<hr />-->
