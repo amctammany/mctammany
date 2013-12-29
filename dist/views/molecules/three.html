@@ -1,0 +1,27 @@
+<p>This is the three view.</p>
+
+<div class="row" ng-hide="molecules">
+  <div class="col-lg-3 col-md-3">
+    <h3>Settings</h3>
+    <ul class="list-group maze-list">
+      <li class="list-group-item" ng-class="activeMolecule(molecule)" ng-click="loadMolecule(molecule)" ng-repeat="molecule in molecules">
+        <!--<span class="col-lg-1 col-md-1 col-sm-1 glyphicon glyphicon-minus-sign" ng-click="deleteMaze(maze)"></span>-->
+        <!--<span class="col-lg-8-offset-1 col-md-8-offset-1 col-sm-8-offset-1">-->
+        <span class="badge">
+          <span class="glyphicon glyphicon-minus-sign" ng-click="deleteMolecule(molecule)"></span>
+        </span>
+        <span>
+          {{molecule.name}}
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div class="col-lg-9 col-md-9">
+    <div class="well center">
+    
+      <threejs height="500" width="500">
+    
+      </threejs>
+    </div>
+  </div>
+</div>

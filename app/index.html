@@ -84,6 +84,9 @@
                     <li>
                       <a href="#" ng-href="#/molecules/new">New Molecule</a>
                     </li>
+                    <li>
+                      <a href="#" ng-href="#/molecules/three">Three</a>
+                    </li>
                   </ul>
                 </li>
                 <li class="dropdown" ng-class="getClass('/experiments')">
@@ -100,6 +103,9 @@
                     </li>
                     <li>
                       <a href="#" ng-href="#/experiments/scrabble">Scrabble</a>
+                    </li>
+                    <li>
+                      <a href="#" ng-href="#/experiments/cylindrome">Cylindrome</a>
                     </li>
                   </ul>
                 </li>
@@ -167,6 +173,7 @@
         <script src="bower_components/angular-resource/angular-resource.js"></script>
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="bower_components/threejs/build/three.js"></script>
         <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
@@ -191,6 +198,7 @@
         <script src="scripts/molecules/controllers/show.js"></script>
         <script src="scripts/molecules/controllers/edit.js"></script>
         <script src="scripts/molecules/controllers/sketcher.js"></script>
+        <script src="scripts/molecules/controllers/three.js"></script>
         <script src="scripts/filters/groupBy.js"></script>
         <script src="scripts/experiments/services/balldrop.js"></script>
         <script src="scripts/experiments/services/maze.js"></script>
@@ -201,6 +209,8 @@
         <script src="scripts/experiments/controllers/maze.js"></script>
         <script src="scripts/experiments/controllers/scrabble.js"></script>
         <script src="scripts/experiments/controllers/marbles.js"></script>
+        <script src="scripts/experiments/controllers/marbles.js"></script>
+        <script src="scripts/experiments/controllers/cylindrome.js"></script>
         <script src="scripts/experiments/directives/balldrop.js"></script>
         <script src="scripts/mc2/controllers/mc2.js"></script>
         <script src="scripts/mc2/services/vector3.js"></script>
@@ -222,6 +232,7 @@
         <script src="scripts/directives/toggle.js"></script>
         <script src="scripts/directives/fileSelect.js"></script>
         <script src="scripts/services/fileReader.js"></script>
+        <script src="scripts/directives/threejs.js"></script>
         <!-- endbuild -->
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 

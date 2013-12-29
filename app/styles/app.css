@@ -3,11 +3,19 @@
 #spring-demo{background:#ccc}
 #maze-canvas{background:#b0c4de;border:1px solid #000}
 #marbles-canvas{background:#b0c4de}
-.maze{width:100%;}
-.maze .maze-row{margin:0;padding:0;height:20px}
-.maze .maze-column{display:inline-block;width:20px}
-.maze .cell{display:inline-block;width:20px;height:20px}
 .maze-list{height:200px;overflow-y:scroll}
+.cylindrome-container{width:210px;height:180px;position:relative;-webkit-perspective:1000px;}
+.cylindrome-container #cylindrome{width:100%;height:100%;position:absolute;-webkit-transform-style:preserve-3d;-webkit-transform:translateZ(-288px);-webkit-transition:-webkit-transform 1s;}
+.cylindrome-container #cylindrome figure{display:block;position:absolute;font-size:60px;line-height:116px;width:210px;height:116px;left:10px;top:10px;border:2px solid #000;}
+.cylindrome-container #cylindrome figure:nth-child(1){-webkit-transform:rotateY(0) translateZ(288px)}
+.cylindrome-container #cylindrome figure:nth-child(2){-webkit-transform:rotateY(40deg) translateZ(288px)}
+.cylindrome-container #cylindrome figure:nth-child(3){-webkit-transform:rotateY(80deg) translateZ(288px)}
+.cylindrome-container #cylindrome figure:nth-child(4){-webkit-transform:rotateY(120deg) translateZ(288px)}
+.cylindrome-container #cylindrome figure:nth-child(5){-webkit-transform:rotateY(160deg) translateZ(288px)}
+.cylindrome-container #cylindrome figure:nth-child(6){-webkit-transform:rotateY(200deg) translateZ(288px)}
+.cylindrome-container #cylindrome figure:nth-child(7){-webkit-transform:rotateY(240deg) translateZ(288px)}
+.cylindrome-container #cylindrome figure:nth-child(8){-webkit-transform:rotateY(280deg) translateZ(288px)}
+.cylindrome-container #cylindrome figure:nth-child(9){-webkit-transform:rotateY(320deg) translateZ(288px)}
 
 .main-container{margin-top:60px}
 .center{margin:0 auto;text-align:center}
@@ -18,6 +26,7 @@
 #collisions-demo{background:#ccc;border:1px solid #000}
 
 #chem-sketcher{background:#fff;border:1px solid #000;margin:0 auto;text-align:center}
+.threejs{margin:0 auto}
 
 .drumkit{background:#8dc5d6;padding:15px;text-align:center}
 .instrument-row{font:small-caps normal 12pt Arial,sans-serif;margin:0;box-sizing:border-box}

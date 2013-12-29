@@ -31,6 +31,10 @@ angular.module('mctApp', ['ngRoute', 'ngSanitize', 'ngResource'])
         templateUrl: 'views/molecules/sketcher.html',
         controller: 'MoleculeSketcherCtrl'
       })
+      .when('/molecules/three', {
+        templateUrl: 'views/molecules/three.html',
+        controller: 'ThreeCtrl'
+      })
       .when('/molecules/:name', {
         templateUrl: 'views/molecules/show.html',
         controller: 'ShowMoleculeCtrl'
@@ -54,6 +58,10 @@ angular.module('mctApp', ['ngRoute', 'ngSanitize', 'ngResource'])
       .when('/experiments/scrabble', {
         templateUrl: 'views/experiments/scrabble.html',
         controller: 'ScrabbleCtrl'
+      })
+      .when('/experiments/cylindrome', {
+        templateUrl: 'views/experiments/cylindrome.html',
+        controller: 'CylindromeCtrl'
       })
       .when('/mc2', {
         templateUrl: 'views/mc2/mc2.html',

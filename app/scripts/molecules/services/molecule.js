@@ -159,6 +159,7 @@ angular.module('mctApp')
       return vertices;
     };
     Molecule.prototype.normalize = function () {
+      this.getBoundingBox();
       for (var i = 0; i < this.atoms.length; i++) {
         var atom = this.atoms[i];
         atom.x = atom.x - (this.minX + this.width) / 2;

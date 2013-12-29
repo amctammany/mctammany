@@ -23,6 +23,7 @@
         "angular": false,
         "Showdown": false,
         "$V": false,
-        "$M": false
+        "$M": false,
+        "THREE": false
     }
 }
